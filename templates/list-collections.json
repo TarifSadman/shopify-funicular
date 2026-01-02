@@ -1,0 +1,8 @@
+{
+    "sections": {
+        "temaplate": {
+            "type": "template-list-collections"
+        }
+    },
+    "order":["temaplate"]
+}

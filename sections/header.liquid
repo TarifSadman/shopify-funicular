@@ -1,0 +1,184 @@
+{% assign main_menu_linklist = linklists[section.settings.menu].links %}
+
+<div class="relative bg-white border-b border-gray-200" x-data="{ mobileMenuOpen: false }">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6">
+    <div class="flex items-center justify-between py-5 md:space-x-10">
+      <!-- STORE NAME / LOGO -->
+      <div class="flex items-center lg:flex-1 min-w-0">
+        <h1 class="text-xl font-semibold tracking-tight text-gray-900 truncate">
+          {{ shop.name }}
+        </h1>
+      </div>
+
+      <!-- MOBILE HAMBURGER -->
+      <div class="md:hidden">
+        <button
+          x-on:click="mobileMenuOpen = true"
+          type="button"
+          class="inline-flex items-center justify-center rounded-md p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:outline-none"
+        >
+          {% render 'icon_hamburger' %}
+        </button>
+      </div>
+
+      <!-- DESKTOP NAV -->
+      <nav class="hidden md:flex items-center space-x-8">
+        {% for link in linklists['main-menu'].links %}
+          {% if link.links != blank %}
+            <div class="relative" x-data="{ open: false }">
+              <button
+                @click="open = !open"
+                type="button"
+                class="inline-flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-gray-900 transition cursor-pointer"
+              >
+                {{ link.title }}
+                {% render 'icon_dropdown' %}
+              </button>
+
+              <div
+                x-show="open"
+                @click.away="open = false"
+                x-transition
+                class="absolute left-1/2 z-20 mt-5 w-screen max-w-md -translate-x-1/2 px-2"
+              >
+                <div class="rounded-xl border border-gray-200 bg-white shadow-lg">
+                  <div class="grid gap-2 p-4">
+                    {% for childlink in link.links %}
+                      <a
+                        href="{{ childlink.url }}"
+                        class="rounded-lg px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
+                      >
+                        {{ childlink.title }}
+                      </a>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          {% else %}
+            <a
+              href="{{ link.url }}"
+              class="text-sm font-medium text-gray-600 hover:text-gray-900 transition"
+            >
+              {{ link.title }}
+            </a>
+          {% endif %}
+        {% endfor %}
+      </nav>
+
+      <!-- RIGHT ACTIONS -->
+      <div class="hidden md:flex items-center justify-end gap-5 md:flex-1">
+        <a
+          href="{{ routes.cart_url }}"
+          class="text-gray-600 hover:text-gray-900 transition"
+          aria-label="Cart"
+        >
+          {% render 'icon_shopping_bag' %}
+        </a>
+
+        {% if shop.customer_accounts_enabled %}
+          <a
+            href="{{ routes.account_login_url }}"
+            class="text-sm font-medium text-gray-600 hover:text-gray-900"
+          >
+            Login
+          </a>
+          <a
+            href="{{ routes.account_register_url }}"
+            class="text-sm font-medium text-gray-600 hover:text-gray-900"
+          >
+            Register
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- MOBILE MENU -->
+  <div
+    x-show="mobileMenuOpen"
+    x-transition
+    class="absolute inset-x-0 top-0 z-30 origin-top md:hidden"
+  >
+    <div class="mx-2 mt-2 rounded-xl bg-white shadow-xl ring-1 ring-black ring-opacity-5">
+      <div class="divide-y divide-gray-100 p-5">
+        <!-- MOBILE HEADER -->
+        <div class="flex items-center justify-between pb-4">
+          <h2 class="text-sm font-medium text-gray-500">
+            {{ section.settings.mobile_menu_title }}
+          </h2>
+
+          <button
+            x-on:click="mobileMenuOpen = false"
+            type="button"
+            class="rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900"
+          >
+            {% render 'icon_close' %}
+          </button>
+        </div>
+
+        <!-- MOBILE NAV -->
+        <div class="pt-4">
+          <nav class="grid gap-y-6">
+            {% for link in main_menu_linklist %}
+              {% assign link_handle = link.handle | replace: '-', '_' %}
+
+              {% if link.links != blank %}
+                <div x-data="{ {{ link_handle }}: false }">
+                  <button
+                    x-on:click="{{ link_handle }} = !{{ link_handle }}"
+                    type="button"
+                    class="flex w-full items-center justify-between text-sm font-medium text-gray-700"
+                  >
+                    {{ link.title }}
+                    {% render 'icon_dropdown' %}
+                  </button>
+
+                  <div x-show="{{ link_handle }}" x-transition class="mt-3 space-y-2 pl-4">
+                    {% for childlink in link.links %}
+                      <a
+                        href="{{ childlink.url }}"
+                        class="block rounded-md px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                      >
+                        {{ childlink.title }}
+                      </a>
+                    {% endfor %}
+                  </div>
+                </div>
+              {% else %}
+                <a
+                  href="{{ link.url }}"
+                  class="block rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                >
+                  {{ link.title }}
+                </a>
+              {% endif %}
+            {% endfor %}
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "text",
+      "id": "mobile_menu_title",
+      "label": "Title",
+      "info": "This is the title of mobile menu",
+      "default": "menu"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Header",
+      "default": "main-menu"
+    }
+  ]
+}
+{% endschema %}

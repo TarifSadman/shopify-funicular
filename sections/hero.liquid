@@ -1,0 +1,57 @@
+<section class="relative bg-gray-100">
+  <div class="mx-auto max-w-7xl px-4 py-20 text-center">
+    <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+      {{ section.settings.heading }}
+    </h1>
+
+    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">
+      {{ section.settings.subheading }}
+    </p>
+
+    {% if section.settings.button_label != blank %}
+      <a
+        href="{{ section.settings.button_link }}"
+        class="inline-block mt-8 rounded-lg bg-black px-8 py-4 font-semibold text-white hover:bg-gray-900 transition"
+      >
+        {{ section.settings.button_label }}
+      </a>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Welcome to our store"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Discover our latest collection and best sellers."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "default": "/collections/all"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero"
+    }
+  ]
+}
+{% endschema %}
