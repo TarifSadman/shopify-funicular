@@ -1,4 +1,13 @@
-<section class="relative bg-gray-100">
+<section
+  class="
+    relative
+    {% if section.settings.container_width == 'container' %}
+      bg-gray-100 text-gray-900
+    {% else %}
+      bg-slate-900 text-white
+    {% endif %}
+  "
+>
   <div
     class="
       {% if section.settings.container_width == 'container' %}
@@ -7,7 +16,7 @@
       px-4 py-20 text-center
     "
   >
-    <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+    <h1 class="text-4xl font-bold tracking-tight sm:text-5xl">
       {{ section.settings.heading }}
     </h1>
 
@@ -15,11 +24,11 @@
       class="
         mt-4
         {% if section.settings.container_width == 'container' %}
-          max-w-2xl
+          max-w-2xl text-gray-600
         {% else %}
-          max-w-none
+          max-w-none text-gray-300
         {% endif %}
-        mx-auto text-lg text-gray-600
+        mx-auto text-lg
       "
     >
       {{ section.settings.subheading }}
@@ -28,7 +37,14 @@
     {% if section.settings.button_label != blank %}
       <a
         href="{{ section.settings.button_link }}"
-        class="inline-block mt-8 rounded-lg bg-black px-8 py-4 font-semibold text-white hover:bg-gray-900 transition"
+        class="
+          inline-block mt-8 rounded-lg px-8 py-4 font-semibold transition
+          {% if section.settings.container_width == 'container' %}
+            bg-black text-white hover:bg-gray-900
+          {% else %}
+            bg-white text-slate-900 hover:bg-gray-200
+          {% endif %}
+        "
       >
         {{ section.settings.button_label }}
       </a>
@@ -75,6 +91,8 @@
       "default": "/collections/all"
     }
   ],
-  "presets": [{ "name": "Hero" }]
+  "presets": [
+    { "name": "Hero" }
+  ]
 }
 {% endschema %}
