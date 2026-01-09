@@ -12,7 +12,7 @@
     "hero": {
       "type": "hero",
       "settings": {
-        "container_width": "container",
+        "container_width": "full",
         "heading": "Welcome to our store",
         "subheading": "Discover our latest collection and best sellers.",
         "button_label": "Shop now",
