@@ -19,6 +19,7 @@
     --color-green-600: oklch(62.7% 0.194 149.214);
     --color-green-700: oklch(52.7% 0.154 150.069);
     --color-green-800: oklch(44.8% 0.119 151.328);
+    --color-cyan-500: oklch(71.5% 0.143 215.221);
     --color-blue-600: oklch(54.6% 0.245 262.881);
     --color-blue-800: oklch(42.4% 0.199 265.638);
     --color-indigo-500: oklch(58.5% 0.233 277.117);
@@ -681,6 +682,9 @@
   }
   .bg-black {
     background-color: var(--color-black);
+  }
+  .bg-cyan-500 {
+    background-color: var(--color-cyan-500);
   }
   .bg-gray-50 {
     background-color: var(--color-gray-50);
