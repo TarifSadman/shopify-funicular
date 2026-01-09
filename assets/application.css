@@ -12,6 +12,7 @@
     --color-red-500: oklch(63.7% 0.237 25.331);
     --color-red-700: oklch(50.5% 0.213 27.518);
     --color-red-800: oklch(44.4% 0.177 26.899);
+    --color-lime-400: oklch(84.1% 0.238 128.85);
     --color-green-50: oklch(98.2% 0.018 155.826);
     --color-green-200: oklch(92.5% 0.084 155.995);
     --color-green-500: oklch(72.3% 0.219 149.579);
@@ -701,6 +702,9 @@
   .bg-green-600 {
     background-color: var(--color-green-600);
   }
+  .bg-lime-400 {
+    background-color: var(--color-lime-400);
+  }
   .bg-red-50 {
     background-color: var(--color-red-50);
   }
@@ -709,6 +713,9 @@
   }
   .bg-slate-900 {
     background-color: var(--color-slate-900);
+  }
+  .bg-transparent {
+    background-color: transparent;
   }
   .bg-white {
     background-color: var(--color-white);
