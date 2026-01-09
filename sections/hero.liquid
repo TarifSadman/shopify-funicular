@@ -2,33 +2,44 @@
   class="
     relative
     {% if section.settings.container_width == 'container' %}
-      bg-gray-100 text-gray-900
+      bg-slate-200
     {% else %}
-      bg-slate-900 text-white
+      bg-slate-900
     {% endif %}
   "
 >
   <div
     class="
+      mx-auto
       {% if section.settings.container_width == 'container' %}
-        mx-auto max-w-7xl
+        w-[90vw] bg-white border border-slate-300 rounded-xl
+      {% else %}
+        w-full
       {% endif %}
       px-4 py-20 text-center
     "
   >
-    <h1 class="text-4xl font-bold tracking-tight sm:text-5xl">
+    <h1
+      class="
+        text-4xl font-bold tracking-tight sm:text-5xl
+        {% if section.settings.container_width == 'container' %}
+          text-slate-900
+        {% else %}
+          text-white
+        {% endif %}
+      "
+    >
       {{ section.settings.heading }}
     </h1>
 
     <p
       class="
-        mt-4
+        mt-4 mx-auto text-lg
         {% if section.settings.container_width == 'container' %}
-          max-w-2xl text-gray-600
+          max-w-2xl text-slate-600
         {% else %}
-          max-w-none text-gray-300
+          max-w-none text-slate-300
         {% endif %}
-        mx-auto text-lg
       "
     >
       {{ section.settings.subheading }}
@@ -40,9 +51,9 @@
         class="
           inline-block mt-8 rounded-lg px-8 py-4 font-semibold transition
           {% if section.settings.container_width == 'container' %}
-            bg-black text-white hover:bg-gray-900
+            bg-black text-white hover:bg-slate-800
           {% else %}
-            bg-white text-slate-900 hover:bg-gray-200
+            bg-white text-slate-900 hover:bg-slate-200
           {% endif %}
         "
       >
@@ -91,8 +102,6 @@
       "default": "/collections/all"
     }
   ],
-  "presets": [
-    { "name": "Hero" }
-  ]
+  "presets": [{ "name": "Hero" }]
 }
 {% endschema %}
