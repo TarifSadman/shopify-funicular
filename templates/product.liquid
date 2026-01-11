@@ -109,8 +109,8 @@
     </div>
   </div>
 
-  {% assign faq_questions = product.metafields.custom.faq_question.value %}
-  {% assign faq_answers = product.metafields.custom.faq_answer.value %}
+  {% assign faq_questions = product.metafields.custom.faq_questions.value %}
+  {% assign faq_answers = product.metafields.custom.faq_answers.value %}
 
   {% if faq_questions != blank %}
     <div class="mt-20 max-w-3xl">
