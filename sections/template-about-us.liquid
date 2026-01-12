@@ -1,12 +1,11 @@
 <div class="bg-white">
   {% for block in section.blocks %}
-    {% assign is_even = forloop.index | modulo: 2 %}
     <section class="py-16 {% if forloop.index > 1 %}border-t border-gray-200{% endif %}">
       <div class="mx-auto max-w-7xl px-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
           
           {%- comment -%} Image Column {%- endcomment -%}
-          <div class="{% if is_even == 0 %}md:order-2{% else %}md:order-1{% endif %}">
+          <div class="{% if block.settings.image_position == 'right' %}md:order-2{% else %}md:order-1{% endif %}">
             {% if block.settings.image != blank %}
               <img
                 src="{{ block.settings.image | image_url: width: 800 }}"
@@ -22,7 +21,7 @@
           </div>
 
           {%- comment -%} Content Column {%- endcomment -%}
-          <div class="{% if is_even == 0 %}md:order-1{% else %}md:order-2{% endif %}">
+          <div class="{% if block.settings.image_position == 'right' %}md:order-1{% else %}md:order-2{% endif %}">
             {% if block.settings.heading != blank %}
               <h2 class="text-3xl font-bold text-gray-900 mb-4">
                 {{ block.settings.heading }}
@@ -60,6 +59,22 @@
       "type": "zigzag_item",
       "name": "Zigzag Item",
       "settings": [
+        {
+          "type": "select",
+          "id": "image_position",
+          "label": "Image position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
         {
           "type": "image_picker",
           "id": "image",
