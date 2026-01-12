@@ -12,27 +12,40 @@
     "template": {
       "type": "template-about-us",
       "blocks": {
-        "zigzag_item_rHD3Gm": {
+        "zigzag_item_9bjUCG": {
           "type": "zigzag_item",
           "settings": {
+            "image_position": "right",
             "heading": "Our Story",
             "description": "Tell your story here. Share your mission, values, and what makes your brand unique.",
             "button_label": "",
             "button_link": ""
           }
         },
-        "zigzag_item_b8BmmY": {
+        "zigzag_item_XqJk4N": {
           "type": "zigzag_item",
           "settings": {
+            "image_position": "left",
             "heading": "Our Story",
             "description": "Tell your story here. Share your mission, values, and what makes your brand unique.",
             "button_label": "",
             "button_link": ""
           }
         },
-        "zigzag_item_hhKK9h": {
+        "zigzag_item_RYYx3T": {
           "type": "zigzag_item",
           "settings": {
+            "image_position": "right",
+            "heading": "Our Story",
+            "description": "Tell your story here. Share your mission, values, and what makes your brand unique.",
+            "button_label": "",
+            "button_link": ""
+          }
+        },
+        "zigzag_item_KA6L4H": {
+          "type": "zigzag_item",
+          "settings": {
+            "image_position": "left",
             "heading": "Our Story",
             "description": "Tell your story here. Share your mission, values, and what makes your brand unique.",
             "button_label": "",
@@ -41,9 +54,10 @@
         }
       },
       "block_order": [
-        "zigzag_item_rHD3Gm",
-        "zigzag_item_b8BmmY",
-        "zigzag_item_hhKK9h"
+        "zigzag_item_9bjUCG",
+        "zigzag_item_XqJk4N",
+        "zigzag_item_RYYx3T",
+        "zigzag_item_KA6L4H"
       ],
       "settings": {}
     }
