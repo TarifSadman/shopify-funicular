@@ -11,6 +11,40 @@
   "sections": {
     "template": {
       "type": "template-about-us",
+      "blocks": {
+        "zigzag_item_rHD3Gm": {
+          "type": "zigzag_item",
+          "settings": {
+            "heading": "Our Story",
+            "description": "Tell your story here. Share your mission, values, and what makes your brand unique.",
+            "button_label": "",
+            "button_link": ""
+          }
+        },
+        "zigzag_item_b8BmmY": {
+          "type": "zigzag_item",
+          "settings": {
+            "heading": "Our Story",
+            "description": "Tell your story here. Share your mission, values, and what makes your brand unique.",
+            "button_label": "",
+            "button_link": ""
+          }
+        },
+        "zigzag_item_hhKK9h": {
+          "type": "zigzag_item",
+          "settings": {
+            "heading": "Our Story",
+            "description": "Tell your story here. Share your mission, values, and what makes your brand unique.",
+            "button_label": "",
+            "button_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "zigzag_item_rHD3Gm",
+        "zigzag_item_b8BmmY",
+        "zigzag_item_hhKK9h"
+      ],
       "settings": {}
     }
   },
