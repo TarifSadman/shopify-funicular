@@ -1,0 +1,154 @@
+{% paginate blog.articles by 6 %}
+  <div class="container py-5">
+    <h1 class="text-center mb-5">{{ blog.title }}</h1>
+
+    <div class="blog-list">
+      <div class="row {% if section.settings.layout == 'grid' %}g-4{% endif %}">
+        {% for article in blog.articles %}
+          {% if section.settings.layout == 'grid' %}
+            <div class="col-md-4 mb-4">
+              <article class="post-item h-100">
+                {% if article.image %}
+                  <div class="post-image mb-3">
+                    <a href="{{ article.url }}" class="d-block">
+                      <img
+                        src="{{ article.image | image_url: width: 600 }}"
+                        alt="{{ article.title }}"
+                        width="600"
+                        height="400"
+                        loading="lazy"
+                        class="img-fluid w-100 object-fit-cover"
+                        style="height: 300px;"
+                      >
+                    </a>
+                  </div>
+                {% endif %}
+                <div class="post-content">
+                  <div class="post-meta text-uppercase fs-6 text-secondary mb-2">
+                    <span class="meta-day">{{ article.published_at | date: '%B %d, %Y' }}</span>
+                  </div>
+                  <h3 class="post-title h4">
+                    <a href="{{ article.url }}" class="text-decoration-none text-dark">{{ article.title }}</a>
+                  </h3>
+                  <div class="rte mb-3">
+                    {% if article.excerpt.size > 0 %}
+                      {{ article.excerpt }}
+                    {% else %}
+                      {{ article.content | strip_html | truncate: 150 }}
+                    {% endif %}
+                  </div>
+                  <a href="{{ article.url }}" class="btn btn-outline-primary btn-sm text-uppercase">Read More</a>
+                </div>
+              </article>
+            </div>
+          {% else %}
+            {% comment %} Zig Zag Logic {% endcomment %}
+            {% assign is_even = forloop.index | modulo: 2 %}
+            {% assign reverse_row = false %}
+
+            {% if section.settings.image_position == 'left' %}
+              {% if is_even == 0 %}
+                {% assign reverse_row = true %}
+              {% endif %}
+            {% else %}
+              {% if is_even != 0 %}
+                {% assign reverse_row = true %}
+              {% endif %}
+            {% endif %}
+
+            <div class="col-12 mb-5">
+              <article class="row align-items-center {% if reverse_row %}flex-row-reverse{% endif %}">
+                <div class="col-md-6">
+                  {% if article.image %}
+                    <div class="post-image">
+                      <a href="{{ article.url }}" class="d-block">
+                        <img
+                          src="{{ article.image | image_url: width: 800 }}"
+                          alt="{{ article.title }}"
+                          width="800"
+                          height="500"
+                          loading="lazy"
+                          class="img-fluid rounded shadow-sm w-100 object-fit-cover"
+                        >
+                      </a>
+                    </div>
+                  {% endif %}
+                </div>
+                <div class="col-md-6">
+                  <div class="post-content p-4 {% if reverse_row %}text-end{% endif %}">
+                    <div class="post-meta text-uppercase text-muted small mb-2">
+                      <span class="meta-day">{{ article.published_at | date: '%B %d, %Y' }}</span>
+                    </div>
+                    <h2 class="post-title h3 mb-3">
+                      <a href="{{ article.url }}" class="text-decoration-none text-dark">{{ article.title }}</a>
+                    </h2>
+                    <div class="rte mb-4 text-muted">
+                      {% if article.excerpt.size > 0 %}
+                        {{ article.excerpt }}
+                      {% else %}
+                        {{ article.content | strip_html | truncate: 250 }}
+                      {% endif %}
+                    </div>
+                    <a href="{{ article.url }}" class="btn btn-primary text-uppercase px-4">Read Article</a>
+                  </div>
+                </div>
+              </article>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if paginate.pages > 1 %}
+      <div class="text-center mt-5">
+        {% render 'pagination', paginate: paginate %}
+      </div>
+    {% endif %}
+  </div>
+{% endpaginate %}
+
+{% schema %}
+{
+  "name": "Blog Main",
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout Style",
+      "options": [
+        {
+          "value": "grid",
+          "label": "Grid"
+        },
+        {
+          "value": "zigzag",
+          "label": "Zig Zag List"
+        }
+      ],
+      "default": "zigzag"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "First Item Image Position",
+      "info": "Only applies to Zig Zag layout",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Blog Main"
+    }
+  ]
+}
+{% endschema %}

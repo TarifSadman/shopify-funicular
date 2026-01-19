@@ -1,45 +1,60 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
-  "sections": {
-    "hero": {
-      "type": "hero",
-      "settings": {
-        "container_width": "container",
-        "heading": "Welcome to our store",
-        "subheading": "Discover our latest collection and best sellers.",
-        "button_label": "Shop now",
-        "button_link": "shopify://collections/all"
-      }
+    "sections": {
+        "hero": {
+            "type": "hero-banner"
+        },
+        "features": {
+            "type": "service-features"
+        },
+        "text_columns": {
+            "type": "collection-list"
+        },
+        "new_arrivals": {
+            "type": "product-carousel",
+            "settings": {
+                "heading": "Our New Arrivals",
+                "collection": "all",
+                "section_id": "new-arrival"
+            }
+        },
+        "collection_banner": {
+            "type": "collection-banner"
+        },
+        "best_sellers": {
+            "type": "product-carousel",
+            "settings": {
+                "heading": "Best Selling Items",
+                "collection": "all",
+                "section_id": "best-sellers"
+            }
+        },
+        "related_products": {
+            "type": "product-carousel",
+            "settings": {
+                "heading": "You May Also Like",
+                "collection": "all",
+                "section_id": "related-products"
+            }
+        },
+        "blog": {
+            "type": "blog-posts",
+            "settings": {
+                "blog": "news"
+            }
+        },
+        "newsletter": {
+            "type": "newsletter"
+        }
     },
-    "featured-collection": {
-      "type": "featured-collection",
-      "settings": {
-        "title": "Featured Collection",
-        "featured_collection": "all",
-        "number_of_products_to_show": 4
-      }
-    },
-    "featured_collection_Rbfnwb": {
-      "type": "featured-collection",
-      "name": "Featured Collection",
-      "settings": {
-        "title": "Featured Placeholder",
-        "featured_collection": "",
-        "number_of_products_to_show": 4
-      }
-    }
-  },
-  "order": [
-    "hero",
-    "featured-collection",
-    "featured_collection_Rbfnwb"
-  ]
+    "order": [
+        "hero",
+        "features",
+        "text_columns",
+        "new_arrivals",
+        "collection_banner",
+        "best_sellers",
+        "related_products",
+        "blog",
+        "newsletter"
+    ]
 }

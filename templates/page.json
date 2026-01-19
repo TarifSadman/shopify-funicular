@@ -1,8 +1,10 @@
 {
     "sections": {
-        "temaplate": {
-            "type": "template-page"
+        "main": {
+            "type": "main-page"
         }
     },
-    "order":["temaplate"]
+    "order": [
+        "main"
+    ]
 }

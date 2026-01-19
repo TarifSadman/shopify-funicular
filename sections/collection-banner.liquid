@@ -1,0 +1,80 @@
+<section class="collection bg-light position-relative py-5">
+  <div class="container">
+    <div class="row">
+      <div class="title-xlarge text-uppercase txt-fx domino">{{ section.settings.background_text }}</div>
+      <div class="collection-item d-flex flex-wrap my-5">
+        <div class="col-md-6 column-container">
+          <div class="image-holder">
+            {% if section.settings.image %}
+              <img
+                src="{{ section.settings.image | img_url: '800x' }}"
+                alt="collection"
+                class="product-image img-fluid"
+              >
+            {% else %}
+              <img src="{{ 'single-image-2.jpg' | asset_url }}" alt="collection" class="product-image img-fluid">
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-md-6 column-container bg-white">
+          <div class="collection-content p-5 m-0 m-md-5">
+            <h3 class="element-title text-uppercase">{{ section.settings.heading }}</h3>
+            <p>
+              {{ section.settings.text }}
+            </p>
+            <a href="{{ section.settings.link_url }}" class="btn btn-dark text-uppercase mt-3">
+              {{- section.settings.link_text -}}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection Banner",
+  "settings": [
+    {
+      "type": "text",
+      "id": "background_text",
+      "label": "Background Text",
+      "default": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Classic winter collection"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Dignissim lacus, turpis ut suspendisse vel tellus. Turpis purus, gravida orci, fringilla a. Ac sed eu fringilla odio mi. Consequat pharetra at magna imperdiet cursus ac faucibus sit libero. Ultricies quam nunc, lorem sit lorem urna, pretium aliquam ut. In vel, quis donec dolor id in. Pulvinar commodo mollis diam sed facilisis at cursus imperdiet cursus ac faucibus sit faucibus sit libero."
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Button Link"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Button Text",
+      "default": "Shop Collection"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Banner"
+    }
+  ]
+}
+{% endschema %}

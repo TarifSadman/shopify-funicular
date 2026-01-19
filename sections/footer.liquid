@@ -1,0 +1,156 @@
+<footer id="footer" class="mt-5 bg-dark text-white py-5">
+  <div class="container">
+    <div class="row d-flex flex-wrap justify-content-between py-4">
+      {% assign footer_menu = linklists[section.settings.menu] %}
+
+      {% comment %}
+        DYNAMIC MENU COLUMNS:
+        This loop automatically creates a column for every top-level item
+        (e.g., Information, Policies) and lists their nested links.
+      {% endcomment %}
+      {% for link in footer_menu.links %}
+        <div class="col-md-3 col-sm-6 mb-4 mb-md-0">
+          <div class="footer-menu footer-menu-{{ forloop.index }}">
+            <h5 class="widget-title text-uppercase mb-4 text-white">
+              {{ link.title }}
+            </h5>
+
+            {% if link.links != blank %}
+              <ul class="menu-list list-unstyled fs-6">
+                {% for child_link in link.links %}
+                  <li class="menu-item mb-2">
+                    <a href="{{ child_link.url }}" class="item-anchor text-white text-decoration-none">
+                      {{ child_link.title }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p class="text-white-50 small">No links found under {{ link.title }}</p>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+
+      {% comment %} COLUMN: CUSTOMER SERVICE {% endcomment %}
+      <div class="col-md-3 col-sm-6 mb-4 mb-md-0 text-center text-md-start">
+        <div class="footer-menu footer-menu-003">
+          <h5 class="widget-title text-uppercase mb-4 text-white">Customer Service</h5>
+          <div class="contact-info fs-6">
+            <p class="mb-2">{{ section.settings.phone }}</p>
+            <p class="mb-2 text-uppercase">{{ section.settings.working_hours }}</p>
+            <p class="mb-2">
+              <a href="mailto:{{ section.settings.contact_email }}" class="text-white text-decoration-none">
+                {{ section.settings.contact_email }}
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {% comment %} COLUMN: SOCIAL LINKS {% endcomment %}
+      <div class="col-md-3 col-sm-6 d-flex align-items-center justify-content-center justify-content-md-end">
+        <div class="social-links">
+          <ul class="list-unstyled d-flex flex-wrap gap-3 mb-0">
+            {% if section.settings.show_social %}
+              {% if settings.social_facebook_link != blank %}
+                <li>
+                  <a
+                    href="{{ settings.social_facebook_link }}"
+                    class="social-icon bg-white text-dark rounded-circle d-flex align-items-center justify-content-center"
+                    style="width: 35px; height: 35px;"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <use xlink:href="#facebook"></use>
+                    </svg>
+                  </a>
+                </li>
+              {% endif %}
+              {% if settings.social_instagram_link != blank %}
+                <li>
+                  <a
+                    href="{{ settings.social_instagram_link }}"
+                    class="social-icon bg-white text-dark rounded-circle d-flex align-items-center justify-content-center"
+                    style="width: 35px; height: 35px;"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <use xlink:href="#instagram"></use>
+                    </svg>
+                  </a>
+                </li>
+              {% endif %}
+              {% if settings.social_youtube_link != blank %}
+                <li>
+                  <a
+                    href="{{ settings.social_youtube_link }}"
+                    class="social-icon bg-white text-dark rounded-circle d-flex align-items-center justify-content-center"
+                    style="width: 35px; height: 35px;"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <use xlink:href="#youtube"></use>
+                    </svg>
+                  </a>
+                </li>
+              {% endif %}
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center py-4 border-top border-secondary">
+        <p class="mb-0 text-white small">
+          © {{ 'now' | date: '%Y' }}
+          {{ shop.name }}. All Rights Reserved.
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Footer Menu",
+      "default": "footer",
+      "info": "Ensure menu items like 'Information' have nested sub-links."
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone Number",
+      "default": "+8801855464672"
+    },
+    {
+      "type": "text",
+      "id": "working_hours",
+      "label": "Working Hours",
+      "default": "SUNDAY-THURSDAY (10:30 AM-11:00 PM)"
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "Email",
+      "default": "customerservice@ribbentrop.net"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social",
+      "label": "Show Social",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer"
+    }
+  ]
+}
+{% endschema %}

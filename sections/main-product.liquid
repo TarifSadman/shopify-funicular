@@ -1,0 +1,285 @@
+<section id="selling-product" class="single-product py-5">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-7">
+        <div class="row flex-column-reverse flex-lg-row">
+          <div class="col-md-12 col-lg-2">
+            <!-- Thumbnail Images (Optional/Future implementation) -->
+            <div class="swiper product-thumbnail-swiper mt-2 mt-lg-0">
+              <div class="swiper-wrapper flex-lg-column">
+                {% for image in product.images %}
+                  <div class="swiper-slide">
+                    <img
+                      src="{{ image.src | image_url: width: 150 }}"
+                      alt="{{ image.alt }}"
+                      width="150"
+                      height="auto"
+                      class="img-fluid cursor-pointer"
+                      onclick="changeImage('{{ image.src | image_url: width: 800 }}')"
+                    >
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 col-lg-10">
+            <!-- Main Image -->
+            <div class="image-holder">
+              <img
+                id="main-product-image"
+                src="{{ product.featured_image | image_url: width: 800 }}"
+                alt="{{ product.title }}"
+                width="800"
+                height="auto"
+                class="img-fluid w-100"
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="product-info">
+          <div class="element-header">
+            <h2 itemprop="name" class="display-6 text-uppercase">{{ product.title }}</h2>
+            <div class="rating-container d-flex gap-0 align-items-center">
+              <div class="rating" data-rating="1">
+                <svg width="32" height="32" class="text-primary">
+                  <use xlink:href="#star-solid"></use>
+                </svg>
+              </div>
+              <div class="rating" data-rating="2">
+                <svg width="32" height="32" class="text-primary">
+                  <use xlink:href="#star-solid"></use>
+                </svg>
+              </div>
+              <div class="rating" data-rating="3">
+                <svg width="32" height="32" class="text-primary">
+                  <use xlink:href="#star-solid"></use>
+                </svg>
+              </div>
+              <div class="rating" data-rating="4">
+                <svg width="32" height="32" class="text-secondary">
+                  <use xlink:href="#star-solid"></use>
+                </svg>
+              </div>
+              <div class="rating" data-rating="5">
+                <svg width="32" height="32" class="text-secondary">
+                  <use xlink:href="#star-solid"></use>
+                </svg>
+              </div>
+              <span class="rating-count">(3.5)</span>
+            </div>
+          </div>
+          <div class="product-price my-3">
+            <span class="fs-2 text-primary">{{ product.price | money }}</span>
+            {% if product.compare_at_price > product.price %}
+              <del class="text-muted ms-2">{{ product.compare_at_price | money }}</del>
+            {% endif %}
+          </div>
+          <p>{{ product.description }}</p>
+          <div class="cart-wrap py-5">
+            {% form 'product', product %}
+              <div class="product-quantity my-3">
+                <div class="item-title">
+                  <p>Quantity</p>
+                </div>
+                <div class="quantity-group d-flex align-items-center overflow-hidden position-relative w-50">
+                  <div class="text-center w-100">
+                    <input
+                      type="number"
+                      name="quantity"
+                      class="form-control text-center border-0 border-bottom"
+                      value="1"
+                      min="1"
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="product-variants my-3">
+                {% unless product.has_only_default_variant %}
+                  <div class="variant-select mb-3">
+                    <select name="id" class="form-select text-uppercase form-control border-0 border-bottom">
+                      {% for variant in product.variants %}
+                        <option
+                          value="{{ variant.id }}"
+                          {% if variant == product.selected_or_first_available_variant %}
+                            selected="selected"
+                          {% endif %}
+                        >
+                          {{ variant.title }}
+                        </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                {% else %}
+                  <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+                {% endunless %}
+              </div>
+
+              <div class="action-buttons my-4 d-flex gap-3">
+                <button type="submit" name="add" class="btn btn-dark btn-lg w-100 text-uppercase">Add to cart</button>
+                <button type="button" class="btn btn-light btn-lg w-100 text-uppercase border" onclick="buyNow(this)">
+                  Buy it now
+                </button>
+              </div>
+            {% endform %}
+          </div>
+          <div class="meta-product py-2">
+            <div class="meta-item d-flex align-items-baseline">
+              <h6 class="item-title no-margin pe-2">SKU:</h6>
+              <ul class="select-list list-unstyled d-flex">
+                <li data-value="S" class="select-item">
+                  {{ product.selected_or_first_available_variant.sku | default: 'N/A' }}
+                </li>
+              </ul>
+            </div>
+            <div class="meta-item d-flex align-items-baseline">
+              <h6 class="item-title no-margin pe-2">Category:</h6>
+              <ul class="select-list list-unstyled d-flex">
+                {% for collection in product.collections %}
+                  <li data-value="S" class="select-item">
+                    <a href="{{ collection.url }}">{{ collection.title }}</a>
+                    {%- unless forloop.last %}, {% endunless %}
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+            <div class="meta-item d-flex align-items-baseline">
+              <h6 class="item-title no-margin pe-2">Tags:</h6>
+              <ul class="select-list list-unstyled d-flex">
+                {% for tag in product.tags %}
+                  <li data-value="S" class="select-item">
+                    <a href="">{{ tag }}</a>
+                    {%- unless forloop.last %}, {% endunless %}
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section
+  id="related-products"
+  class="related-products product-carousel py-5 position-relative overflow-hidden bg-light"
+>
+  <div class="container">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
+      <h4 class="text-uppercase">You May Also Like</h4>
+      <a href="{{ routes.all_products_collection_url }}" class="btn-link">View All Products</a>
+    </div>
+    <div class="swiper product-swiper open-up" data-aos="zoom-out">
+      <div class="swiper-wrapper d-flex">
+        {% assign related_collection = collections.all %}
+        {% if product.collections.size > 0 %}
+          {% assign related_collection = product.collections.first %}
+        {% endif %}
+
+        {% for related_product in related_collection.products limit: 4 %}
+          {% unless related_product.id == product.id %}
+            <div class="swiper-slide">
+              <div class="product-item image-zoom-effect link-effect">
+                <div class="image-holder position-relative">
+                  <a href="{{ related_product.url }}">
+                    <img
+                      src="{{ related_product.featured_image | image_url: width: 600 }}"
+                      alt="{{ related_product.title }}"
+                      width="600"
+                      height="auto"
+                      class="product-image img-fluid"
+                    >
+                  </a>
+                  <a href="#" class="btn-icon btn-wishlist">
+                    <svg width="24" height="24" viewBox="0 0 24 24">
+                      <use xlink:href="#heart"></use>
+                    </svg>
+                  </a>
+                  <div class="product-content">
+                    <h5 class="text-uppercase fs-5 mt-3">
+                      <a href="{{ related_product.url }}">{{ related_product.title }}</a>
+                    </h5>
+                    <a href="{{ related_product.url }}" class="text-decoration-none" data-after="Add to cart"
+                      ><span>{{ related_product.price | money }}</span></a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endunless %}
+        {% endfor %}
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+    <div class="icon-arrow icon-arrow-left">
+      <svg width="50" height="50" viewBox="0 0 24 24">
+        <use xlink:href="#arrow-left"></use>
+      </svg>
+    </div>
+    <div class="icon-arrow icon-arrow-right">
+      <svg width="50" height="50" viewBox="0 0 24 24">
+        <use xlink:href="#arrow-right"></use>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<script>
+  function changeImage(src) {
+    document.getElementById('main-product-image').src = src;
+  }
+
+  function buyNow(btn) {
+    var form = btn.closest('form');
+    var formData = new FormData(form);
+
+    var originalText = btn.innerHTML;
+    btn.innerHTML = 'Processing...';
+    btn.disabled = true;
+
+    fetch(window.Shopify.routes.root + 'cart/add.js', {
+      method: 'POST',
+      body: formData,
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data.status) {
+          alert(data.description);
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+        } else {
+          if (window.Shopify && window.Shopify.designMode) {
+            alert(
+              'Redirecting to checkout is disabled in the Theme Editor. Please preview the theme in a new tab to test the checkout flow.'
+            );
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+          } else {
+            window.location.href = '/checkout';
+          }
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      });
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Product Main",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Product Main"
+    }
+  ]
+}
+{% endschema %}

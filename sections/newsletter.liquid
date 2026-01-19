@@ -1,0 +1,63 @@
+<section
+  class="newsletter bg-light"
+  style="
+    {% if section.settings.bg_image %}
+      background: url({{ section.settings.bg_image | img_url: '1920x' }}) no-repeat;
+    {% else %}
+      background: url({{ 'pattern-bg.png' | asset_url }}) no-repeat;
+    {% endif %}
+    background-size: cover;
+  "
+>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 py-5 my-5">
+        <div class="subscribe-header text-center pb-3">
+          <h3 class="section-title text-uppercase">{{ section.settings.heading }}</h3>
+        </div>
+        {% form 'customer' %}
+          <div class="d-flex flex-wrap gap-2">
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <input
+              type="email"
+              name="contact[email]"
+              placeholder="Your Email Addresss"
+              class="form-control form-control-lg"
+              autocorrect="off"
+              autocapitalize="off"
+              required
+            >
+            <button class="btn btn-dark btn-lg text-uppercase w-100" type="submit">Sign Up</button>
+          </div>
+          {% if form.posted_successfully? %}
+            <p class="form-status form-status-list form__message" tabindex="-1" autofocus>Thanks for subscribing!</p>
+          {% endif %}
+        {% endform %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Sign Up for our newsletter"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter"
+    }
+  ]
+}
+{% endschema %}

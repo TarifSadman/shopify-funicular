@@ -1,0 +1,109 @@
+<section
+  id="{{ section.settings.section_id | default: section.id }}"
+  class="product-carousel py-5 position-relative overflow-hidden"
+>
+  <div class="container">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
+      <h4 class="text-uppercase">{{ section.settings.heading }}</h4>
+      <a href="{{ section.settings.link_url }}" class="btn-link">{{ section.settings.link_text }}</a>
+    </div>
+    <div class="swiper product-swiper open-up" data-aos="zoom-out">
+      <div class="swiper-wrapper d-flex">
+        {% assign collection = collections[section.settings.collection] %}
+        {% assign product_limit = section.settings.product_limit | default: 8 %}
+        {% assign products = collection.products | default: collections.all.products %}
+
+        {% for product in products limit: product_limit %}
+          <div class="swiper-slide">
+            <div class="product-item image-zoom-effect link-effect">
+              <div class="image-holder position-relative">
+                <a href="{{ product.url }}">
+                  <img
+                    src="{{ product.featured_image | img_url: '600x' }}"
+                    alt="{{ product.title }}"
+                    class="product-image img-fluid"
+                  >
+                </a>
+                <a href="#" class="btn-icon btn-wishlist">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <use xlink:href="#heart"></use>
+                  </svg>
+                </a>
+                <div class="product-content">
+                  <h5 class="element-title text-uppercase fs-5 mt-3">
+                    <a href="{{ product.url }}">{{ product.title }}</a>
+                  </h5>
+                  <a href="{{ product.url }}" class="text-decoration-none" data-after="View Product"
+                    ><span>{{ product.price | money }}</span></a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+    <div class="icon-arrow icon-arrow-left">
+      <svg width="50" height="50" viewBox="0 0 24 24">
+        <use xlink:href="#arrow-left"></use>
+      </svg>
+    </div>
+    <div class="icon-arrow icon-arrow-right">
+      <svg width="50" height="50" viewBox="0 0 24 24">
+        <use xlink:href="#arrow-right"></use>
+      </svg>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product Carousel",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_id",
+      "label": "Section ID (for styling/anchors)",
+      "default": "new-arrival"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our New Arrivals"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL",
+      "default": "/collections/all"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link Text",
+      "default": "View All Products"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "product_limit",
+      "min": 4,
+      "max": 12,
+      "step": 1,
+      "label": "Product Limit",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Carousel"
+    }
+  ]
+}
+{% endschema %}

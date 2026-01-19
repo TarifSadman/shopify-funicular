@@ -1,0 +1,68 @@
+<section class="instagram position-relative">
+  <div class="d-flex justify-content-center w-100 position-absolute bottom-0 z-1">
+    <a href="{{ section.settings.instagram_url }}" class="btn btn-dark px-5">Follow us on Instagram</a>
+  </div>
+  <div class="row g-0">
+    {% for block in section.blocks %}
+      <div class="col-6 col-sm-4 col-md-2">
+        <div class="insta-item">
+          <a href="{{ section.settings.instagram_url }}" target="_blank">
+            {% if block.settings.image %}
+              <img
+                src="{{ block.settings.image | img_url: '400x400', crop: 'center' }}"
+                alt="instagram"
+                class="insta-image img-fluid"
+              >
+            {% else %}
+              <img
+                src="{{ 'insta-item' | append: forloop.index | append: '.jpg' | asset_url }}"
+                alt="instagram"
+                class="insta-image img-fluid"
+              >
+            {% endif %}
+          </a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Instagram Feed",
+  "settings": [
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL",
+      "default": "https://www.instagram.com/templatesjungle/"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Instagram Feed",
+      "blocks": [
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" }
+      ]
+    }
+  ]
+}
+{% endschema %}

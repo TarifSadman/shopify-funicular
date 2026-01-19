@@ -1,204 +1,164 @@
-{% assign main_menu_linklist = linklists[section.settings.menu].links %}
-
-<div class="relative bg-slate-900 border-b border-slate-800" x-data="{ mobileMenuOpen: false }">
-  <div class="mx-auto max-w-7xl px-4 sm:px-6">
-    <div class="flex items-center justify-between py-4 md:space-x-10">
-      <!-- STORE NAME / LOGO -->
-      <div class="flex items-center lg:flex-1 min-w-0">
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg flex items-center justify-center">
-            <span class="text-white font-bold text-lg">◆</span>
-          </div>
-          <h1 class="text-lg font-semibold tracking-tight text-white truncate">
-            {{ shop.name }}
-          </h1>
-        </div>
-      </div>
-
-      <!-- MOBILE HAMBURGER -->
-      <div class="md:hidden">
-        <button
-          x-on:click="mobileMenuOpen = true"
-          type="button"
-          class="inline-flex items-center justify-center rounded-md p-2 text-slate-400 hover:bg-slate-800 hover:text-white focus:outline-none"
-        >
-          {% render 'icon_hamburger' %}
-        </button>
-      </div>
-
-      <!-- DESKTOP NAV -->
-      <nav class="hidden md:flex items-center space-x-8">
-        {% for link in linklists['main-menu'].links %}
-          {% if link.links != blank %}
-            <div class="relative" x-data="{ open: false }">
-              <button
-                @click="open = !open"
-                type="button"
-                class="inline-flex items-center gap-1 text-sm font-medium text-slate-300 hover:text-white transition cursor-pointer"
-              >
-                {{ link.title }}
-                <svg
-                  class="w-4 h-4 transition-transform"
-                  :class="{ 'rotate-180': open }"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                </svg>
-              </button>
-
-              <div
-                x-show="open"
-                @click.away="open = false"
-                x-transition
-                class="absolute left-0 z-20 mt-3 w-48 px-0"
-              >
-                <div class="rounded-lg border border-slate-700 bg-slate-800 shadow-xl">
-                  <div class="grid gap-0 p-3">
-                    {% for childlink in link.links %}
-                      <a
-                        href="{{ childlink.url }}"
-                        class="rounded-md px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition"
-                      >
-                        {{ childlink.title }}
-                      </a>
-                    {% endfor %}
-                  </div>
-                </div>
-              </div>
-            </div>
-
+<nav class="navbar navbar-expand-lg bg-light text-uppercase fs-6 p-3 border-bottom align-items-center">
+  <div class="container-fluid">
+    <div class="row justify-content-between align-items-center w-100">
+      <div class="col-auto">
+        <a class="navbar-brand text-white" href="{{ routes.root_url }}">
+          {% if section.settings.logo %}
+            <img src="{{ section.settings.logo | img_url: '150x' }}" alt="{{ shop.name }}">
           {% else %}
-            <a
-              href="{{ link.url }}"
-              class="text-sm font-medium text-slate-300 hover:text-white transition"
-            >
-              {{ link.title }}
-            </a>
+            <span class="text-black">{{ shop.name }}</span>
           {% endif %}
-        {% endfor %}
-      </nav>
-
-      <!-- RIGHT ACTIONS -->
-      <div class="hidden md:flex items-center justify-end gap-6 md:flex-1">
-        <a
-          href="{{ routes.cart_url }}"
-          class="text-slate-400 hover:text-white transition"
-          aria-label="Cart"
-        >
-          {% render 'icon_shopping_bag' %}
         </a>
-
-        {% if shop.customer_accounts_enabled %}
-          <a
-            href="{{ routes.account_login_url }}"
-            class="text-sm font-medium text-slate-300 hover:text-white transition"
-          >
-            Login
-          </a>
-          <a
-            href="{{ routes.account_register_url }}"
-            class="text-sm font-medium text-slate-300 hover:text-white transition"
-          >
-            Sign up
-          </a>
-        {% endif %}
       </div>
-    </div>
-  </div>
 
-  <!-- MOBILE MENU -->
-  <div
-    x-show="mobileMenuOpen"
-    x-transition
-    class="absolute inset-x-0 top-full z-30 md:hidden"
-  >
-    <div class="mx-2 mt-2 rounded-lg bg-slate-800 shadow-xl border border-slate-700">
-      <div class="divide-y divide-slate-700 p-5">
-        <!-- MOBILE HEADER -->
-        <div class="flex items-center justify-between pb-4">
-          <h2 class="text-sm font-medium text-slate-400">
-            {{ section.settings.mobile_menu_title }}
-          </h2>
+      <div class="col-auto">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#offcanvasNavbar"
+          aria-controls="offcanvasNavbar"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-          <button
-            x-on:click="mobileMenuOpen = false"
-            type="button"
-            class="rounded-md p-2 text-slate-400 hover:bg-slate-700 hover:text-white"
-          >
-            {% render 'icon_close' %}
-          </button>
-        </div>
+        <div
+          class="offcanvas offcanvas-end"
+          tabindex="-1"
+          id="offcanvasNavbar"
+          aria-labelledby="offcanvasNavbarLabel"
+        >
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+            <button
+              type="button"
+              class="btn-close text-reset"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+            ></button>
+          </div>
 
-        <!-- MOBILE NAV -->
-        <div class="pt-4">
-          <nav class="grid gap-y-4">
-            {% for link in main_menu_linklist %}
-              {% assign link_handle = link.handle | replace: '-', '_' %}
-
-              {% if link.links != blank %}
-                <div x-data="{ {{ link_handle }}: false }">
-                  <button
-                    x-on:click="{{ link_handle }} = !{{ link_handle }}"
-                    type="button"
-                    class="flex w-full items-center justify-between text-sm font-medium text-slate-300 hover:text-white transition"
+          <div class="offcanvas-body">
+            <ul class="navbar-nav justify-content-end flex-grow-1 gap-1 gap-md-5 pe-3">
+              {% for link in linklists[section.settings.menu].links %}
+                <li class="nav-item {% if link.links != blank %}dropdown{% endif %}">
+                  <a
+                    class="nav-link {% if link.links != blank %}dropdown-toggle{% endif %}"
+                    href="{% if link.url contains 'index.html' %}{{ routes.root_url }}{% else %}{{ link.url }}{% endif %}"
+                    {% if link.links != blank %}
+                      id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+                    {% endif %}
                   >
                     {{ link.title }}
-                    <svg
-                      class="w-4 h-4 transition-transform"
-                      :class="{ 'rotate-180': {{ link_handle }} }"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                    </svg>
-                  </button>
-
-                  <div x-show="{{ link_handle }}" x-transition class="mt-3 space-y-2 pl-4">
-                    {% for childlink in link.links %}
-                      <a
-                        href="{{ childlink.url }}"
-                        class="block rounded-md px-3 py-2 text-sm text-slate-400 hover:bg-slate-700 hover:text-white transition"
-                      >
-                        {{ childlink.title }}
-                      </a>
-                    {% endfor %}
-                  </div>
-                </div>
-              {% else %}
-                <a
-                  href="{{ link.url }}"
-                  class="block rounded-md px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition"
-                >
-                  {{ link.title }}
-                </a>
-              {% endif %}
-            {% endfor %}
-          </nav>
+                  </a>
+                  {% if link.links != blank %}
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      {% for childlink in link.links %}
+                        <li>
+                          <a
+                            class="dropdown-item"
+                            href="{% if childlink.url contains 'index.html' %}{{ routes.root_url }}{% else %}{{ childlink.url }}{% endif %}"
+                          >
+                            {{- childlink.title -}}
+                          </a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+          <style>
+            @media (min-width: 992px) {
+              .dropdown:hover .dropdown-menu {
+                display: block;
+                margin-top: 0;
+              }
+            }
+          </style>
         </div>
+      </div>
+
+      <div class="col-3 col-lg-auto">
+        <ul class="list-unstyled d-flex m-0">
+          <li class="d-none d-lg-block position-relative wishlist-hover-container">
+            <a href="/pages/wishlist" class="text-uppercase mx-3">Wishlist <span class="wishlist-count">(0)</span> </a>
+            <div
+              id="wishlist-dropdown-container"
+              class="position-absolute bg-white shadow rounded border"
+              style="top: 100%; right: 0; width: 320px; z-index: 1000; display: none;"
+            >
+              <!-- Wishlist items will be rendered here by JS -->
+            </div>
+            <style>
+              .wishlist-hover-container:hover #wishlist-dropdown-container {
+                display: block !important;
+              }
+            </style>
+          </li>
+          <li class="d-none d-lg-block">
+            <a
+              href="{{ routes.cart_url }}"
+              class="text-uppercase mx-3"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvasCart"
+              aria-controls="offcanvasCart"
+              >Cart <span class="cart-count">({{ cart.item_count }})</span>
+            </a>
+          </li>
+          <li class="d-lg-none">
+            <a href="#" class="mx-2">
+              <svg width="24" height="24" viewBox="0 0 24 24">
+                <use xlink:href="#heart"></use>
+              </svg>
+            </a>
+          </li>
+          <li class="d-lg-none">
+            <a
+              href="#"
+              class="mx-2"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvasCart"
+              aria-controls="offcanvasCart"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24">
+                <use xlink:href="#cart"></use>
+              </svg>
+            </a>
+          </li>
+          <li class="search-box" class="mx-2">
+            <a href="#search" class="search-button">
+              <svg width="24" height="24" viewBox="0 0 24 24">
+                <use xlink:href="#search"></use>
+              </svg>
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
-</div>
+</nav>
 
 {% schema %}
 {
   "name": "Header",
   "settings": [
     {
-      "type": "text",
-      "id": "mobile_menu_title",
-      "label": "Title",
-      "info": "This is the title of mobile menu",
-      "default": "menu"
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
     },
     {
       "type": "link_list",
       "id": "menu",
-      "label": "Header",
+      "label": "Menu",
       "default": "main-menu"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header"
     }
   ]
 }

@@ -1,0 +1,92 @@
+<div class="post-wrap py-5">
+  <div class="container">
+    <div class="row">
+      <main class="post-grid col-md-12">
+        <article class="post-item">
+          <div class="post-content align-center my-5">
+            <div class="post-meta text-uppercase text-secondary fs-6">
+              <span class="post-category">Fashion /</span>
+              <span class="meta-day"> {{ article.published_at | date: '%b %d, %Y' }}</span>
+            </div>
+            <h1 class="post-title text-uppercase">{{ article.title }}</h1>
+          </div>
+          {% if article.image %}
+            <div class="post-image">
+              <img
+                src="{{ article.image | image_url: width: 1400 }}"
+                alt="{{ article.title }}"
+                width="1400"
+                height="auto"
+                class="img-fluid w-100"
+              >
+            </div>
+          {% endif %}
+          <div class="post-description py-5">
+            {{ article.content }}
+          </div>
+          <div class="post-bottom-link d-flex justify-content-between">
+            <div class="block-tag">
+              <ul class="list-unstyled d-flex">
+                {% for tag in article.tags %}
+                  <li class="pe-3">
+                    <a href="{{ blog.url }}/tagged/{{ tag | handle }}">{{ tag }}</a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+            <div class="social-links d-flex">
+              <div class="element-title pe-2">Share:</div>
+              <ul class="list-unstyled d-flex gap-3">
+                <li>
+                  <a
+                    href="https://www.facebook.com/sharer/sharer.php?u={{ shop.url | append: article.url }}"
+                    target="_blank"
+                    class="text-secondary"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                      <use xlink:href="#facebook"></use>
+                    </svg>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://twitter.com/intent/tweet?text={{ article.title }}&url={{ shop.url | append: article.url }}"
+                    target="_blank"
+                    class="text-secondary"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                      <use xlink:href="#twitter"></use>
+                    </svg>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://pinterest.com/pin/create/button/?url={{ shop.url | append: article.url }}&media={{ article.image | image_url: width: 1400 }}&description={{ article.title }}"
+                    target="_blank"
+                    class="text-secondary"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                      <use xlink:href="#pinterest"></use>
+                    </svg>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </article>
+      </main>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Article Main",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Article Main"
+    }
+  ]
+}
+{% endschema %}
