@@ -42,7 +42,7 @@ const Wishlist = {
     
     // Update Counts
     const counts = document.querySelectorAll('.wishlist-count');
-    counts.forEach(el => el.textContent = `(${wishlist.length})`);
+    counts.forEach(el => el.textContent = wishlist.length);
 
     // Update Buttons on page
     const buttons = document.querySelectorAll('.btn-wishlist');
@@ -79,7 +79,7 @@ const Wishlist = {
         </a>
         <div class="flex-grow-1">
           <h6 class="m-0 fs-6"><a href="${item.url}" class="text-decoration-none text-dark">${item.title}</a></h6>
-          <small>${item.price}</small>
+          <small class="text-muted">${item.price}</small>
         </div>
         <button class="btn btn-sm text-danger remove-wishlist-item" data-handle="${item.handle}">&times;</button>
       </div>

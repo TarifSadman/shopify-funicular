@@ -1,144 +1,226 @@
-<nav class="navbar navbar-expand-lg bg-light text-uppercase fs-6 p-3 border-bottom align-items-center">
+<header class="header-section bg-black text-white p-3">
   <div class="container-fluid">
-    <div class="row justify-content-between align-items-center w-100">
-      <div class="col-auto">
-        <a class="navbar-brand text-white" href="{{ routes.root_url }}">
-          {% if section.settings.logo %}
-            <img src="{{ section.settings.logo | img_url: '150x' }}" alt="{{ shop.name }}">
-          {% else %}
-            <span class="text-black">{{ shop.name }}</span>
-          {% endif %}
-        </a>
-      </div>
-
-      <div class="col-auto">
+    <div class="row align-items-center justify-content-between">
+      <!-- Mobile Toggle (Show on Mobile only) -->
+      <div class="col-auto d-lg-none">
         <button
-          class="navbar-toggler"
+          class="navbar-toggler text-white border-0 p-0"
           type="button"
           data-bs-toggle="offcanvas"
           data-bs-target="#offcanvasNavbar"
           aria-controls="offcanvasNavbar"
         >
-          <span class="navbar-toggler-icon"></span>
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
         </button>
-
-        <div
-          class="offcanvas offcanvas-end"
-          tabindex="-1"
-          id="offcanvasNavbar"
-          aria-labelledby="offcanvasNavbarLabel"
-        >
-          <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
-            <button
-              type="button"
-              class="btn-close text-reset"
-              data-bs-dismiss="offcanvas"
-              aria-label="Close"
-            ></button>
-          </div>
-
-          <div class="offcanvas-body">
-            <ul class="navbar-nav justify-content-end flex-grow-1 gap-1 gap-md-5 pe-3">
-              {% for link in linklists[section.settings.menu].links %}
-                <li class="nav-item {% if link.links != blank %}dropdown{% endif %}">
-                  <a
-                    class="nav-link {% if link.links != blank %}dropdown-toggle{% endif %}"
-                    href="{% if link.url contains 'index.html' %}{{ routes.root_url }}{% else %}{{ link.url }}{% endif %}"
-                    {% if link.links != blank %}
-                      id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"
-                    {% endif %}
-                  >
-                    {{ link.title }}
-                  </a>
-                  {% if link.links != blank %}
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                      {% for childlink in link.links %}
-                        <li>
-                          <a
-                            class="dropdown-item"
-                            href="{% if childlink.url contains 'index.html' %}{{ routes.root_url }}{% else %}{{ childlink.url }}{% endif %}"
-                          >
-                            {{- childlink.title -}}
-                          </a>
-                        </li>
-                      {% endfor %}
-                    </ul>
-                  {% endif %}
-                </li>
-              {% endfor %}
-            </ul>
-          </div>
-          <style>
-            @media (min-width: 992px) {
-              .dropdown:hover .dropdown-menu {
-                display: block;
-                margin-top: 0;
-              }
-            }
-          </style>
-        </div>
       </div>
 
-      <div class="col-3 col-lg-auto">
-        <ul class="list-unstyled d-flex m-0">
-          <li class="d-none d-lg-block position-relative wishlist-hover-container">
-            <a href="/pages/wishlist" class="text-uppercase mx-3">Wishlist <span class="wishlist-count">(0)</span> </a>
-            <div
-              id="wishlist-dropdown-container"
-              class="position-absolute bg-white shadow rounded border"
-              style="top: 100%; right: 0; width: 320px; z-index: 1000; display: none;"
-            >
-              <!-- Wishlist items will be rendered here by JS -->
-            </div>
-            <style>
-              .wishlist-hover-container:hover #wishlist-dropdown-container {
-                display: block !important;
-              }
-            </style>
-          </li>
-          <li class="d-none d-lg-block">
+      <!-- Left Side: Menu Items (Desktop Only) -->
+      <div class="col d-none d-lg-block">
+        <ul class="d-flex list-unstyled m-0 gap-4">
+          {% for link in linklists[section.settings.menu].links %}
+            <li class="nav-item position-relative {% if link.links != blank %}dropdown-hover{% endif %}">
+              <a
+                href="{{ link.url }}"
+                class="text-white text-decoration-none text-uppercase fs-6 header-link"
+              >
+                {{ link.title }}
+              </a>
+              {% if link.links != blank %}
+                <ul
+                  class="dropdown-menu position-absolute bg-white shadow-sm border-0 rounded-0 p-2"
+                  style="top: 100%; left: 0; min-width: 200px;"
+                >
+                  {% for childlink in link.links %}
+                    <li>
+                      <a class="dropdown-item text-black text-uppercase fs-6 py-2" href="{{ childlink.url }}">
+                        {{ childlink.title }}
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Center: Logo -->
+      <div class="col-auto text-center">
+        <a class="navbar-brand text-white fs-3 font-family-secondary" href="{{ routes.root_url }}">
+          {% if section.settings.logo %}
+            <img src="{{ section.settings.logo | img_url: '150x' }}" alt="{{ shop.name }}" class="img-fluid">
+          {% else %}
+            <span>{{ shop.name }}</span>
+          {% endif %}
+        </a>
+      </div>
+
+      <!-- Right Side: Icons -->
+      <div class="col text-end">
+        <ul class="list-unstyled d-flex align-items-center justify-content-end m-0 gap-3 gap-lg-4">
+          <!-- Search Icon -->
+          <li class="search-box">
             <a
-              href="{{ routes.cart_url }}"
-              class="text-uppercase mx-3"
-              data-bs-toggle="offcanvas"
-              data-bs-target="#offcanvasCart"
-              aria-controls="offcanvasCart"
-              >Cart <span class="cart-count">({{ cart.item_count }})</span>
-            </a>
-          </li>
-          <li class="d-lg-none">
-            <a href="#" class="mx-2">
-              <svg width="24" height="24" viewBox="0 0 24 24">
-                <use xlink:href="#heart"></use>
-              </svg>
-            </a>
-          </li>
-          <li class="d-lg-none">
-            <a
-              href="#"
-              class="mx-2"
-              data-bs-toggle="offcanvas"
-              data-bs-target="#offcanvasCart"
-              aria-controls="offcanvasCart"
+              href="{{ routes.search_url }}"
+              class="text-white search-button"
+              data-bs-toggle="modal"
+              data-bs-target="#searchModal"
             >
-              <svg width="24" height="24" viewBox="0 0 24 24">
-                <use xlink:href="#cart"></use>
-              </svg>
-            </a>
-          </li>
-          <li class="search-box" class="mx-2">
-            <a href="#search" class="search-button">
-              <svg width="24" height="24" viewBox="0 0 24 24">
+              <svg width="22" height="22" viewBox="0 0 24 24">
                 <use xlink:href="#search"></use>
               </svg>
+            </a>
+          </li>
+
+          <!-- User Icon (if enabled) -->
+          {% if shop.customer_accounts_enabled %}
+            <li class="d-none d-lg-block">
+              <a
+                href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"
+                class="text-white"
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24">
+                  <use xlink:href="#user"></use>
+                </svg>
+              </a>
+            </li>
+          {% endif %}
+
+          <!-- Wishlist Icon -->
+          <li class="d-none d-lg-block position-relative wishlist-hover-container">
+            <a href="/pages/wishlist" class="text-white position-relative">
+              <svg width="22" height="22" viewBox="0 0 24 24">
+                <use xlink:href="#heart"></use>
+              </svg>
+              <span
+                class="wishlist-count position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                style="font-size: 0.6rem;"
+                >0</span
+              >
+            </a>
+            <!-- Wishlist Dropdown -->
+            <div
+              id="wishlist-dropdown-container"
+              class="position-absolute bg-white shadow rounded border text-start"
+              style="top: 100%; right: 0; width: 300px; z-index: 1000; display: none;"
+            >
+              <!-- JS populates this -->
+            </div>
+          </li>
+
+          <!-- Cart Icon -->
+          <li>
+            <a
+              href="{{ routes.cart_url }}"
+              class="text-white position-relative"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvasCart"
+              aria-controls="offcanvasCart"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24">
+                <use xlink:href="#shopping-bag"></use>
+              </svg>
+              {% if cart.item_count > 0 %}
+                <span
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary"
+                  style="font-size: 0.6rem;"
+                >
+                  {{ cart.item_count }}
+                </span>
+              {% endif %}
             </a>
           </li>
         </ul>
       </div>
     </div>
   </div>
-</nav>
+
+  <!-- Mobile Offcanvas Menu -->
+  <div
+    class="offcanvas offcanvas-start"
+    tabindex="-1"
+    id="offcanvasNavbar"
+    aria-labelledby="offcanvasNavbarLabel"
+  >
+    <div class="offcanvas-header justify-content-between">
+      <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+        {% for link in linklists[section.settings.menu].links %}
+          <li class="nav-item {% if link.links != blank %}dropdown{% endif %}">
+            <a
+              class="nav-link text-uppercase {% if link.links != blank %}dropdown-toggle{% endif %}"
+              href="{{ link.url }}"
+              {% if link.links != blank %}
+                role="button" data-bs-toggle="dropdown" aria-expanded="false"
+              {% endif %}
+            >
+              {{ link.title }}
+            </a>
+            {% if link.links != blank %}
+              <ul class="dropdown-menu">
+                {% for childlink in link.links %}
+                  <li>
+                    <a class="dropdown-item" href="{{ childlink.url }}">
+                      {{- childlink.title -}}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </li>
+        {% endfor %}
+        <li class="nav-item">
+          <a href="/pages/wishlist" class="nav-link text-uppercase">Wishlist</a>
+        </li>
+        <li class="nav-item">
+          {% if shop.customer_accounts_enabled %}
+            <a
+              href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"
+              class="nav-link text-uppercase"
+              >Account</a
+            >
+          {% endif %}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <style>
+    .dropdown-hover:hover .dropdown-menu {
+      display: block;
+    }
+    .wishlist-hover-container:hover #wishlist-dropdown-container {
+      display: block !important;
+    }
+    .header-link:hover {
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+    /* Ensure icons align well */
+    .header-section svg {
+      vertical-align: middle;
+    }
+    .bg-black {
+      background-color: #111 !important; /* Deep dark background */
+    }
+  </style>
+</header>
 
 {% schema %}
 {
