@@ -12,6 +12,7 @@
     "hero": {
       "type": "hero-banner",
       "settings": {
+        "background_image": "shopify://shop_images/summer-collection.png",
         "overlay_opacity": 30,
         "heading": "New Summer Collection",
         "subheading": "Discover the latest trends and styles for the season.",
