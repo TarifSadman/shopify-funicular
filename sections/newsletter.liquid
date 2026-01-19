@@ -16,21 +16,30 @@
           <h3 class="section-title text-uppercase">{{ section.settings.heading }}</h3>
         </div>
         {% form 'customer' %}
-          <div class="d-flex flex-wrap gap-2">
-            <input type="hidden" name="contact[tags]" value="newsletter">
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <div class="d-flex flex-column flex-md-row gap-2">
             <input
               type="email"
               name="contact[email]"
-              placeholder="Your Email Addresss"
-              class="form-control form-control-lg"
+              placeholder="Your Email Address"
+              class="form-control form-control-lg flex-grow-1"
               autocorrect="off"
               autocapitalize="off"
               required
             >
-            <button class="btn btn-dark btn-lg text-uppercase w-100" type="submit">Sign Up</button>
+            <button class="btn btn-dark btn-lg text-uppercase" type="submit">Sign Up</button>
           </div>
+
           {% if form.posted_successfully? %}
-            <p class="form-status form-status-list form__message" tabindex="-1" autofocus>Thanks for subscribing!</p>
+            <p class="form-status form-status-list form__message text-success mt-2" tabindex="-1" autofocus>
+              Success! Please check your email to confirm your subscription.
+            </p>
+          {% endif %}
+
+          {% if form.errors %}
+            <div class="form-status form-status-list form__message text-danger mt-2">
+              {{ form.errors | default_errors }}
+            </div>
           {% endif %}
         {% endform %}
       </div>

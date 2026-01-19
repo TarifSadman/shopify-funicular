@@ -68,7 +68,7 @@ const Wishlist = {
     if (!container) return;
 
     if (wishlist.length === 0) {
-      container.innerHTML = '<div class="p-3 text-center">Your wishlist is empty.</div>';
+      container.innerHTML = '<div class="p-3 text-center text-muted">Your wishlist is empty.<br><a href="/collections/all" class="text-decoration-underline text-primary mt-2 d-inline-block">Shop Now</a></div>';
       return;
     }
 
@@ -85,7 +85,23 @@ const Wishlist = {
       </div>
     `).join('');
 
-    container.innerHTML = `<div class="p-3">${html}</div><div class="p-3 border-top text-center"><a href="/pages/wishlist" class="btn btn-outline-primary btn-sm w-100">View Wishlist</a></div>`;
+    // Generate Mailto Link
+    const subject = "My Wishlist";
+    const body = wishlist.map(item => `${item.title} - ${item.price}\n${window.location.origin}${item.url}`).join('\n\n');
+    const mailtoLink = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    container.innerHTML = `
+      <div class="p-3" style="max-height: 300px; overflow-y: auto;">
+        ${html}
+      </div>
+      <div class="p-3 border-top d-flex gap-2">
+        <a href="${mailtoLink}" class="btn btn-dark btn-sm w-100 d-flex align-items-center justify-content-center gap-2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+          Email List
+        </a>
+        <a href="/pages/wishlist" class="btn btn-outline-primary btn-sm w-100">View All</a>
+      </div>
+    `;
 
     // Bind remove buttons in dropdown
     container.querySelectorAll('.remove-wishlist-item').forEach(btn => {
