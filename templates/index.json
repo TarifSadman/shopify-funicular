@@ -1,60 +1,102 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
-    "sections": {
-        "hero": {
-            "type": "hero-banner"
-        },
-        "features": {
-            "type": "service-features"
-        },
-        "text_columns": {
-            "type": "collection-list"
-        },
-        "new_arrivals": {
-            "type": "product-carousel",
-            "settings": {
-                "heading": "Our New Arrivals",
-                "collection": "all",
-                "section_id": "new-arrival"
-            }
-        },
-        "collection_banner": {
-            "type": "collection-banner"
-        },
-        "best_sellers": {
-            "type": "product-carousel",
-            "settings": {
-                "heading": "Best Selling Items",
-                "collection": "all",
-                "section_id": "best-sellers"
-            }
-        },
-        "related_products": {
-            "type": "product-carousel",
-            "settings": {
-                "heading": "You May Also Like",
-                "collection": "all",
-                "section_id": "related-products"
-            }
-        },
-        "blog": {
-            "type": "blog-posts",
-            "settings": {
-                "blog": "news"
-            }
-        },
-        "newsletter": {
-            "type": "newsletter"
-        }
+  "sections": {
+    "hero": {
+      "type": "hero-banner",
+      "settings": {
+        "background_image": "shopify://shop_images/summer-collection.png",
+        "overlay_opacity": 30,
+        "heading": "New Summer Collection",
+        "subheading": "Discover the latest trends and styles for the season.",
+        "text_alignment": "center",
+        "button_text": "Shop Now",
+        "button_link": "shopify://collections/summer-collection"
+      }
     },
-    "order": [
-        "hero",
-        "features",
-        "text_columns",
-        "new_arrivals",
-        "collection_banner",
-        "best_sellers",
-        "related_products",
-        "blog",
-        "newsletter"
-    ]
+    "features": {
+      "type": "service-features",
+      "settings": {}
+    },
+    "text_columns": {
+      "type": "collection-list",
+      "settings": {}
+    },
+    "new_arrivals": {
+      "type": "product-carousel",
+      "settings": {
+        "section_id": "new-arrival",
+        "heading": "Our New Arrivals",
+        "link_url": "shopify://collections/all",
+        "link_text": "View All Products",
+        "collection": "all",
+        "product_limit": 8
+      }
+    },
+    "collection_banner": {
+      "type": "collection-banner",
+      "settings": {
+        "background_text": "Collection",
+        "heading": "Classic winter collection",
+        "text": "Dignissim lacus, turpis ut suspendisse vel tellus. Turpis purus, gravida orci, fringilla a. Ac sed eu fringilla odio mi. Consequat pharetra at magna imperdiet cursus ac faucibus sit libero. Ultricies quam nunc, lorem sit lorem urna, pretium aliquam ut. In vel, quis donec dolor id in. Pulvinar commodo mollis diam sed facilisis at cursus imperdiet cursus ac faucibus sit faucibus sit libero.",
+        "link_url": "",
+        "link_text": "Shop Collection"
+      }
+    },
+    "best_sellers": {
+      "type": "product-carousel",
+      "settings": {
+        "section_id": "best-sellers",
+        "heading": "Best Selling Items",
+        "link_url": "shopify://collections/all",
+        "link_text": "View All Products",
+        "collection": "all",
+        "product_limit": 8
+      }
+    },
+    "related_products": {
+      "type": "product-carousel",
+      "settings": {
+        "section_id": "related-products",
+        "heading": "You May Also Like",
+        "link_url": "shopify://collections/all",
+        "link_text": "View All Products",
+        "collection": "all",
+        "product_limit": 8
+      }
+    },
+    "blog": {
+      "type": "blog-posts",
+      "settings": {
+        "heading": "Our Recent Blog",
+        "blog": "news",
+        "link_text": "Read All Articles",
+        "post_limit": 3
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "heading": "Sign Up for our newsletter"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "features",
+    "text_columns",
+    "new_arrivals",
+    "collection_banner",
+    "best_sellers",
+    "related_products",
+    "blog",
+    "newsletter"
+  ]
 }
