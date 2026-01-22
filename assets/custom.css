@@ -1,82 +1,174 @@
-/* Consistent Image Sizing */
-.product-image,
-.cat-item .image-holder img,
-.product-item .image-holder img,
-.post-item .post-image img,
-.collection-item .image-holder img {
+/* body {
+    background-color: red;
+} */
+
+button#AddToCart {
+    cursor: pointer;
+}
+
+.side-cart {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    font-family: inherit;
+}
+
+.side-cart__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    backdrop-filter: blur(2px);
+}
+
+.side-cart__panel {
+    position: absolute;
+    top: 0;
+    right: 0;
     width: 100%;
-    height: 400px;
-    /* Adjust height as needed */
-    object-fit: cover;
-    object-position: center;
+    max-width: 450px;
+    height: 100%;
+    background: #fff;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
 }
 
-/* Specific adjustment for smaller cards if needed */
-.cat-item .image-holder img {
-    height: 300px;
+body.side-cart-open .side-cart {
+    pointer-events: auto;
 }
 
-/* Ensure container handles the fixed height gracefully */
-.image-holder {
-    overflow: hidden;
+body.side-cart-open .side-cart__overlay {
+    opacity: 1;
 }
 
-/* FAQ Section Design */
-.product-faq-section {
-    background: #ffffff;
+body.side-cart-open .side-cart__panel {
+    transform: translateX(0);
 }
 
-/* Accordion container */
-.product-faq-section .accordion {
-    --bs-accordion-bg: transparent;
-    --bs-accordion-border-width: 0;
-}
-
-/* Each FAQ card */
-.product-faq-section .accordion-item {
-    background: #f6f6f6;
-    border-radius: 12px;
-    margin-bottom: 12px;
+.side-cart__close {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f3f4f6;
     border: none;
-    overflow: hidden;
-}
-
-/* Question button */
-.product-faq-section .accordion-button {
-    background: transparent;
-    font-weight: 600;
-    font-size: 16px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
     color: #111;
-    padding: 18px 20px;
-    box-shadow: none;
+    transition: background 0.2s, transform 0.2s;
+    z-index: 20;
 }
 
-/* Remove Bootstrap focus/active styles */
-.product-faq-section .accordion-button:focus {
-    box-shadow: none;
+.side-cart__close:hover {
+    background: #e5e7eb;
+    transform: rotate(90deg);
 }
 
-/* Chevron icon */
-.product-faq-section .accordion-button::after {
-    background-size: 14px;
-    transform: rotate(0deg);
-    transition: transform 0.25s ease;
+#SideCartContent {
+    height: 100%;
+    overflow: hidden;
 }
 
-/* Rotate icon when open */
-.product-faq-section .accordion-button:not(.collapsed)::after {
-    transform: rotate(180deg);
+.c-header__nav-icons .c-header__nav-link {
+    padding: 8px 12px;
 }
 
-/* Answer panel */
-.product-faq-section .accordion-body {
-    padding: 0 20px 18px;
-    font-size: 15px;
-    color: #555;
-    line-height: 1.6;
+.c-header__nav-cart-link {
+    padding-right: 0 !important;
+    position: relative;
 }
 
-/* Remove default collapse border */
-.product-faq-section .accordion-collapse {
+.c-header__nav-link,
+.c-header__nav-dropdown-link {
+    align-items: center;
+    color: #707070;
+    display: inline-flex;
+    font-size: 13px;
+    letter-spacing: 1px;
+    padding: 8px 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: .15s;
+    white-space: nowrap;
+}
+
+.c-header__nav-link>svg,
+.c-header__nav-dropdown-link>svg {
+    width: 20px;
+}
+
+.c-header__nav-cart-link sup {
+    align-items: center;
+    background: red;
+    border-radius: 50%;
+    color: #fff;
+    display: inline-flex;
+    font-size: 10px;
+    height: 16px;
+    justify-content: center;
+    padding: 4px;
+    position: absolute;
+    right: -8px;
+    top: 0;
+    width: 16px;
+}
+
+#SideCart form[action="/cart"] {
+    margin-top: 1rem;
+}
+
+/* Quantity Counter */
+.el-qty-counter {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 4px 6px;
+    background-color: #ffffff;
+}
+
+.el-qty-btn {
+    width: 26px;
+    height: 26px;
     border: none;
+    background-color: #f3f4f6;
+    color: #111827;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+.el-qty-btn:hover:not(:disabled) {
+    background-color: #e5e7eb;
+}
+
+.el-qty-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.el-qty-value {
+    min-width: 22px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
 }

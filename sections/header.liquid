@@ -1,246 +1,226 @@
-<header class="header-section bg-black text-white p-3">
-  <div class="container-fluid">
-    <div class="row align-items-center justify-content-between">
-      <!-- Mobile Toggle (Show on Mobile only) -->
-      <div class="col-auto d-lg-none">
+{% assign main_menu_linklist = linklists[section.settings.menu].links %}
+
+<div class="relative bg-slate-900 border-b border-slate-800" x-data="{ mobileMenuOpen: false }">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6">
+    <div class="flex items-center justify-between py-4 md:space-x-10">
+      <!-- STORE NAME / LOGO -->
+      <div class="flex items-center lg:flex-1 min-w-0">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg flex items-center justify-center">
+            <span class="text-white font-bold text-lg">◆</span>
+          </div>
+          <h1 class="text-lg font-semibold tracking-tight text-white truncate">
+            {{ shop.name }}
+          </h1>
+        </div>
+      </div>
+
+      <!-- MOBILE HAMBURGER -->
+      <div class="md:hidden">
         <button
-          class="navbar-toggler text-white border-0 p-0"
+          x-on:click="mobileMenuOpen = !mobileMenuOpen"
           type="button"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvasNavbar"
-          aria-controls="offcanvasNavbar"
+          class="inline-flex items-center justify-center rounded-md p-2 text-slate-400 hover:bg-slate-800 hover:text-white focus:outline-none"
         >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
+          {% render 'icon_hamburger' %}
         </button>
       </div>
 
-      <!-- Left Side: Menu Items (Desktop Only) -->
-      <div class="col d-none d-lg-block">
-        <ul class="d-flex list-unstyled m-0 gap-4">
-          {% for link in linklists[section.settings.menu].links %}
-            <li class="nav-item position-relative {% if link.links != blank %}dropdown-hover{% endif %}">
-              <a
-                href="{{ link.url }}"
-                class="text-white text-decoration-none text-uppercase fs-6 header-link"
+      <!-- DESKTOP NAV -->
+      <nav class="hidden md:flex items-center space-x-8">
+        {% for link in linklists['main-menu'].links %}
+          {% if link.links != blank %}
+            <div class="relative" x-data="{ open: false }">
+              <button
+                @click="open = !open"
+                type="button"
+                class="inline-flex items-center gap-1 text-sm font-medium text-slate-300 hover:text-white transition cursor-pointer"
               >
                 {{ link.title }}
-              </a>
-              {% if link.links != blank %}
-                <ul
-                  class="dropdown-menu position-absolute bg-white shadow-sm border-0 rounded-0 p-2"
-                  style="top: 100%; left: 0; min-width: 200px;"
+                <svg
+                  class="w-4 h-4 transition-transform"
+                  :class="{ 'rotate-180': open }"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  {% for childlink in link.links %}
-                    <li>
-                      <a class="dropdown-item text-black text-uppercase fs-6 py-2" href="{{ childlink.url }}">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                </svg>
+              </button>
+
+              <div
+                x-show="open"
+                @click.away="open = false"
+                x-transition
+                class="absolute left-0 z-20 mt-3 w-48 px-0"
+              >
+                <div class="rounded-lg border border-slate-700 bg-slate-800 shadow-xl">
+                  <div class="grid gap-0 p-3">
+                    {% for childlink in link.links %}
+                      <a
+                        href="{{ childlink.url }}"
+                        class="rounded-md px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition"
+                      >
                         {{ childlink.title }}
                       </a>
-                    </li>
-                  {% endfor %}
-                </ul>
-              {% endif %}
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-
-      <!-- Center: Logo -->
-      <div class="col-auto text-center">
-        <a class="navbar-brand text-white fs-3 font-family-secondary" href="{{ routes.root_url }}">
-          {% if section.settings.logo %}
-            <img src="{{ section.settings.logo | img_url: '150x' }}" alt="{{ shop.name }}" class="img-fluid">
-          {% else %}
-            <span>{{ shop.name }}</span>
-          {% endif %}
-        </a>
-      </div>
-
-      <!-- Right Side: Icons -->
-      <div class="col text-end">
-        <ul class="list-unstyled d-flex align-items-center justify-content-end m-0 gap-3 gap-lg-4">
-          <!-- Search Icon -->
-          <li class="search-box">
-            <a
-              href="{{ routes.search_url }}"
-              class="text-white search-button"
-              data-bs-toggle="modal"
-              data-bs-target="#searchModal"
-            >
-              <svg width="22" height="22" viewBox="0 0 24 24">
-                <use xlink:href="#search"></use>
-              </svg>
-            </a>
-          </li>
-
-          <!-- User Icon (if enabled) -->
-          {% if shop.customer_accounts_enabled %}
-            <li class="d-none d-lg-block">
-              <a
-                href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"
-                class="text-white"
-              >
-                <svg width="22" height="22" viewBox="0 0 24 24">
-                  <use xlink:href="#user"></use>
-                </svg>
-              </a>
-            </li>
-          {% endif %}
-
-          <!-- Wishlist Icon -->
-          <li class="d-none d-lg-block position-relative wishlist-hover-container">
-            <a href="/pages/wishlist" class="text-white position-relative">
-              <svg width="22" height="22" viewBox="0 0 24 24">
-                <use xlink:href="#heart"></use>
-              </svg>
-              <span
-                class="wishlist-count position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                style="font-size: 0.6rem;"
-                >0</span
-              >
-            </a>
-            <!-- Wishlist Dropdown -->
-            <div
-              id="wishlist-dropdown-container"
-              class="position-absolute bg-white shadow rounded border text-start"
-              style="top: 100%; right: 0; width: 300px; z-index: 1000; display: none;"
-            >
-              <!-- JS populates this -->
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
             </div>
-          </li>
 
-          <!-- Cart Icon -->
-          <li>
+          {% else %}
             <a
-              href="{{ routes.cart_url }}"
-              class="text-white position-relative"
-              data-bs-toggle="offcanvas"
-              data-bs-target="#offcanvasCart"
-              aria-controls="offcanvasCart"
-            >
-              <svg width="22" height="22" viewBox="0 0 24 24">
-                <use xlink:href="#shopping-bag"></use>
-              </svg>
-              {% if cart.item_count > 0 %}
-                <span
-                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary"
-                  style="font-size: 0.6rem;"
-                >
-                  {{ cart.item_count }}
-                </span>
-              {% endif %}
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- Mobile Offcanvas Menu -->
-  <div
-    class="offcanvas offcanvas-start"
-    tabindex="-1"
-    id="offcanvasNavbar"
-    aria-labelledby="offcanvasNavbarLabel"
-  >
-    <div class="offcanvas-header justify-content-between">
-      <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-      <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-        {% for link in linklists[section.settings.menu].links %}
-          <li class="nav-item {% if link.links != blank %}dropdown{% endif %}">
-            <a
-              class="nav-link text-uppercase {% if link.links != blank %}dropdown-toggle{% endif %}"
               href="{{ link.url }}"
-              {% if link.links != blank %}
-                role="button" data-bs-toggle="dropdown" aria-expanded="false"
-              {% endif %}
+              class="text-sm font-medium text-slate-300 hover:text-white transition"
             >
               {{ link.title }}
             </a>
-            {% if link.links != blank %}
-              <ul class="dropdown-menu">
-                {% for childlink in link.links %}
-                  <li>
-                    <a class="dropdown-item" href="{{ childlink.url }}">
-                      {{- childlink.title -}}
-                    </a>
-                  </li>
-                {% endfor %}
-              </ul>
-            {% endif %}
-          </li>
-        {% endfor %}
-        <li class="nav-item">
-          <a href="/pages/wishlist" class="nav-link text-uppercase">Wishlist</a>
-        </li>
-        <li class="nav-item">
-          {% if shop.customer_accounts_enabled %}
-            <a
-              href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"
-              class="nav-link text-uppercase"
-              >Account</a
-            >
           {% endif %}
-        </li>
-      </ul>
+        {% endfor %}
+      </nav>
+
+      <!-- RIGHT ACTIONS -->
+      <div class="hidden md:flex items-center justify-end gap-6 md:flex-1">
+        <a
+          href="{{ routes.cart_url }}"
+          class="c-header__nav-cart-link c-header__nav-link"
+          aria-label="Cart"
+          onclick="event.preventDefault(); openSideCart();"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            width="16"
+            class="c-icon-cart"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+            />
+          </svg>
+
+          <sup
+            id="CartCount"
+            class="{% if cart.item_count == 0 %}hidden{% endif %}"
+          >
+            {{ cart.item_count }}
+          </sup>
+        </a>
+
+        {% if shop.customer_accounts_enabled %}
+          <a
+            href="{{ routes.account_login_url }}"
+            class="text-sm font-medium text-slate-300 hover:text-white transition"
+          >
+            Login
+          </a>
+          <a
+            href="{{ routes.account_register_url }}"
+            class="text-sm font-medium text-slate-300 hover:text-white transition"
+          >
+            Sign up
+          </a>
+        {% endif %}
+      </div>
     </div>
   </div>
 
-  <style>
-    .dropdown-hover:hover .dropdown-menu {
-      display: block;
-    }
-    .wishlist-hover-container:hover #wishlist-dropdown-container {
-      display: block !important;
-    }
-    .header-link:hover {
-      opacity: 0.7;
-      transition: opacity 0.3s;
-    }
-    /* Ensure icons align well */
-    .header-section svg {
-      vertical-align: middle;
-    }
-    .bg-black {
-      background-color: #111 !important; /* Deep dark background */
-    }
-  </style>
-</header>
+  <!-- MOBILE MENU -->
+  <div
+    x-show="mobileMenuOpen"
+    x-transition
+    class="absolute inset-x-0 top-full z-30 md:hidden"
+  >
+    <div class="mx-2 mt-2 rounded-lg bg-slate-800 shadow-xl border border-slate-700">
+      <div class="divide-y divide-slate-700 p-5">
+        <!-- MOBILE HEADER -->
+        <div class="flex items-center justify-between pb-4">
+          <h2 class="text-sm font-medium text-slate-400">
+            {{ section.settings.mobile_menu_title }}
+          </h2>
+
+          <button
+            x-on:click="mobileMenuOpen = false"
+            type="button"
+            class="rounded-md p-2 text-slate-400 hover:bg-slate-700 hover:text-white"
+          >
+            {% render 'icon_close' %}
+          </button>
+        </div>
+
+        <!-- MOBILE NAV -->
+        <div class="pt-4">
+          <nav class="grid gap-y-4">
+            {% for link in main_menu_linklist %}
+              {% assign link_handle = link.handle | replace: '-', '_' %}
+
+              {% if link.links != blank %}
+                <div x-data="{ {{ link_handle }}: false }">
+                  <button
+                    x-on:click="{{ link_handle }} = !{{ link_handle }}"
+                    type="button"
+                    class="flex w-full items-center justify-between text-sm font-medium text-slate-300 hover:text-white transition"
+                  >
+                    {{ link.title }}
+                    <svg
+                      class="w-4 h-4 transition-transform"
+                      :class="{ 'rotate-180': {{ link_handle }} }"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                    </svg>
+                  </button>
+
+                  <div x-show="{{ link_handle }}" x-transition class="mt-3 space-y-2 pl-4">
+                    {% for childlink in link.links %}
+                      <a
+                        href="{{ childlink.url }}"
+                        class="block rounded-md px-3 py-2 text-sm text-slate-400 hover:bg-slate-700 hover:text-white transition"
+                      >
+                        {{ childlink.title }}
+                      </a>
+                    {% endfor %}
+                  </div>
+                </div>
+              {% else %}
+                <a
+                  href="{{ link.url }}"
+                  class="block rounded-md px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-700 hover:text-white transition"
+                >
+                  {{ link.title }}
+                </a>
+              {% endif %}
+            {% endfor %}
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% schema %}
 {
   "name": "Header",
   "settings": [
     {
-      "type": "image_picker",
-      "id": "logo",
-      "label": "Logo"
+      "type": "text",
+      "id": "mobile_menu_title",
+      "label": "Title",
+      "info": "This is the title of mobile menu",
+      "default": "menu"
     },
     {
       "type": "link_list",
       "id": "menu",
-      "label": "Menu",
+      "label": "Header",
       "default": "main-menu"
-    }
-  ],
-  "presets": [
-    {
-      "name": "Header"
     }
   ]
 }
