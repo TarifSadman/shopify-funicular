@@ -1,0 +1,23 @@
+<footer class="footer">
+  <div class="footer-content">
+    <p>
+      &copy; {{ 'now' | date: '%Y' }}
+
+      {{ section.settings.copyright_text }}. All rights reserved.
+    </p>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright Text",
+      "default": "Tarif Sadman"
+    }
+  ]
+}
+{% endschema %}
