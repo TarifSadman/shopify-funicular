@@ -1,8 +1,1 @@
-{
-    "sections": {
-        "temaplate": {
-            "type": "template-page"
-        }
-    },
-    "order":["temaplate"]
-}
+{"sections":{"temaplate":{"type":"template-page","settings":{}}},"order":["temaplate"]}
