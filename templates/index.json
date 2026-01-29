@@ -35,18 +35,11 @@
         "featured_collection": "",
         "number_of_products_to_show": 4
       }
-    },
-    "footer": {
-      "type": "footer",
-      "settings": {
-        "copyright_text": "Tarif Sadman"
-      }
     }
   },
   "order": [
     "hero",
     "featured-collection",
-    "featured_collection_Rbfnwb",
-    "footer"
+    "featured_collection_Rbfnwb"
   ]
 }
