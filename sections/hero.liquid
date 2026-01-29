@@ -1,51 +1,56 @@
-<section
-  class="relative bg-transparent"
->
-  <div
-    class="
-      mx-auto
-      {% if section.settings.container_width == 'container' %}
-        max-w-6xl
+<section class="mx-auto {% if section.settings.container_width == 'container' %}max-w-7xl px-4 sm:px-6{% endif %} pb-8">
+  <div class="relative overflow-hidden h-[500px] md:h-[700px] flex items-center justify-center text-center shadow-2xl">
+    <!-- Background Image -->
+    <picture>
+      {% if section.settings.hero_image != blank %}
+        <img
+          src="{{ section.settings.hero_image | image_url: width: 2000 }}"
+          alt="{{ section.settings.hero_image.alt | default: section.settings.heading }}"
+          class="absolute inset-0 w-full h-full object-cover"
+          loading="eager"
+          width="2000"
+          height="1000"
+        >
       {% else %}
-        w-full
+        <img
+          src="https://images.pexels.com/photos/8311891/pexels-photo-8311891.jpeg"
+          alt="Hero background"
+          class="absolute inset-0 w-full h-full object-cover"
+          loading="eager"
+          width="2000"
+          height="1000"
+        >
       {% endif %}
-      px-4 py-20 text-center bg-cyan-500
-    "
-  >
-    <h1
-      class="text-4xl font-bold tracking-tight sm:text-5xl text-white"
-    >
-      {{ section.settings.heading }}
-    </h1>
+    </picture>
 
-    <p
-      class="
-        mt-4 mx-auto text-lg
-        {% if section.settings.container_width == 'container' %}
-          max-w-2xl text-slate-600
-        {% else %}
-          max-w-none text-slate-300
-        {% endif %}
-      "
-    >
-      {{ section.settings.subheading }}
-    </p>
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-black/40 bg-gradient-to-b from-black/30 via-transparent to-black/60"></div>
 
-    {% if section.settings.button_label != blank %}
-      <a
-        href="{{ section.settings.button_link }}"
-        class="
-          inline-block mt-8 rounded-lg px-8 py-4 font-semibold transition
-          {% if section.settings.container_width == 'container' %}
-            bg-black text-white hover:bg-slate-800
-          {% else %}
-            bg-white text-slate-900 hover:bg-slate-200
-          {% endif %}
-        "
-      >
-        {{ section.settings.button_label }}
-      </a>
-    {% endif %}
+    <!-- Content -->
+    <div class="relative z-10 px-6 max-w-4xl">
+      <h1 class="text-5xl md:text-8xl font-black text-white tracking-tighter leading-[1.1] drop-shadow-2xl">
+        {{ section.settings.heading }}
+      </h1>
+      <p class="mt-8 mx-auto text-xl md:text-2xl text-white/90 leading-relaxed font-medium max-w-2xl drop-shadow-lg">
+        {{ section.settings.subheading }}
+      </p>
+
+      {% if section.settings.button_label != blank %}
+        <div class="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a
+            href="{{ section.settings.button_link }}"
+            class="px-10 py-5 bg-white text-black font-bold hover:bg-black hover:text-white transition-all duration-300 shadow-2xl transform hover:-translate-y-1 active:scale-95 text-lg"
+          >
+            {{ section.settings.button_label }}
+          </a>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Decorative bottom highlight -->
+    <div
+      class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/30 to-transparent pointer-events-none"
+    ></div>
   </div>
 </section>
 
@@ -58,28 +63,34 @@
       "id": "container_width",
       "label": "Container width",
       "options": [
-        { "value": "container", "label": "Container (max-width: 1080px)" },
+        { "value": "container", "label": "Container (max-width: 7xl)" },
         { "value": "full", "label": "Full width" }
       ],
       "default": "container"
     },
     {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero Image",
+      "info": "Leave blank to use the default cinematic image."
+    },
+    {
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Welcome to our store"
+      "default": "Elevate Your Style"
     },
     {
       "type": "textarea",
       "id": "subheading",
       "label": "Subheading",
-      "default": "Discover our latest collection and best sellers."
+      "default": "Explore our curated collection of premium essentials designed for the modern individual."
     },
     {
       "type": "text",
       "id": "button_label",
       "label": "Button label",
-      "default": "Shop now"
+      "default": "Shop The Collection"
     },
     {
       "type": "url",
@@ -89,5 +100,5 @@
     }
   ],
   "presets": [{ "name": "Hero" }]
- }
+}
 {% endschema %}

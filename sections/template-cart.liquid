@@ -1,6 +1,6 @@
 {% if cart.item_count > 0 %}
   <div class="p-6 bg-gray-50 min-h-screen">
-    <div class="max-w-6xl flex flex-col my-10 mx-auto">
+    <div class="max-w-7xl flex flex-col my-10 mx-auto px-4 sm:px-6">
       <div class="flex items-end justify-between my-6 border-b pb-4">
         <h1 class="text-3xl font-semibold text-gray-800">Your Cart</h1>
         <a
@@ -12,7 +12,7 @@
       </div>
     </div>
 
-    <div class="max-w-6xl flex flex-col my-10 mx-auto bg-white rounded-lg shadow-sm">
+    <div class="max-w-7xl flex flex-col my-10 mx-auto bg-white rounded-lg shadow-sm px-4 sm:px-6">
       <form action="{{ routes.cart_url }}" method="post">
         <table class="table-auto w-full border-collapse">
           <thead class="bg-gray-100">
@@ -34,6 +34,8 @@
                       <img
                         src="{{ item.product.featured_image | image_url: width: 200 }}"
                         class="w-24 h-24 object-cover rounded-md border"
+                        width="200"
+                        height="200"
                       >
                     {% else %}
                       {{ 'product-1' | placeholder_svg_tag: 'w-24 h-24 rounded-md border' }}
@@ -128,7 +130,7 @@
     </div>
   </div>
 {% else %}
-  <div class="max-w-6xl h-60 my-10 flex items-center mx-auto justify-center">
+  <div class="max-w-7xl h-60 my-10 flex items-center mx-auto justify-center px-4 sm:px-6">
     <div class="text-center bg-white p-10 rounded-lg shadow-sm">
       <h2 class="text-3xl font-semibold text-gray-800 mb-4">Your cart is currently empty</h2>
       <div class="my-4">
