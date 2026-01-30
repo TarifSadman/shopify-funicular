@@ -7,16 +7,20 @@
       <!-- Main Swiper -->
       <div class="swiper product-main-swiper border bg-white overflow-hidden">
         <div class="swiper-wrapper">
-          {% for image in product.images %}
-            <div class="swiper-slide">
-              <img
-                src="{{ image.src | image_url: width: 800 }}"
-                alt="{{ image.alt | escape }}"
-                width="800"
-                height="800"
-                class="w-full h-full object-contain"
-                loading="lazy"
-              >
+          {% for media in product.media %}
+            <div class="swiper-slide" data-media-id="{{ media.id }}">
+              {% if media.media_type == 'image' %}
+                <img
+                  src="{{ media.preview_image | image_url: width: 800 }}"
+                  alt="{{ media.alt | escape }}"
+                  width="800"
+                  height="800"
+                  class="w-full h-full object-contain"
+                  loading="lazy"
+                >
+              {% else %}
+                {{ media | media_tag: class: 'w-full h-full object-contain' }}
+              {% endif %}
             </div>
           {% endfor %}
         </div>
@@ -35,12 +39,12 @@
 
       <div class="swiper product-thumb-swiper mt-4">
         <div class="swiper-wrapper">
-          {% for image in product.images %}
-            <div class="swiper-slide cursor-pointer opacity-50 transition-opacity hover:opacity-100 swiper-slide-thumb-active:opacity-100">
+          {% for media in product.media %}
+            <div class="swiper-slide cursor-pointer" data-media-id="{{ media.id }}">
               <div class="border overflow-hidden shrink-0">
                 <img
-                  src="{{ image.src | image_url: width: 200 }}"
-                  alt="{{ image.alt | escape }}"
+                  src="{{ media.preview_image | image_url: width: 200 }}"
+                  alt="{{ media.alt | escape }}"
                   width="200"
                   height="200"
                   class="w-full aspect-square object-cover"
@@ -73,30 +77,102 @@
 
           {% when 'variant_selector' %}
             <div class="mt-6" {{ block.shopify_attributes }}>
-              <label for="productSelect-{{ section.id }}" class="block text-sm font-medium text-gray-700 mb-1">
-                Variant
-              </label>
-              <select
-                name="id"
-                id="productSelect-{{ section.id }}"
-                class="w-full border px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black"
-                form="AddToCartForm-{{ section.id }}"
-              >
-                {% for variant in product.variants %}
-                  {% if variant.available %}
-                    <option
-                      value="{{ variant.id }}"
-                      {% if variant == current_variant %}
-                        selected="selected"
-                      {% endif %}
-                    >
-                      {{ variant.title }} — {{ variant.price | money_with_currency }}
-                    </option>
-                  {% else %}
-                    <option disabled>{{ variant.title }} — Sold out</option>
-                  {% endif %}
-                {% endfor %}
-              </select>
+              {% unless product.has_only_default_variant %}
+                <div class="variant-selects" data-section="{{ section.id }}">
+                  {% for option in product.options_with_values %}
+                    <div class="mb-4">
+                      <label
+                        for="Option-{{ section.id }}-{{ forloop.index0 }}"
+                        class="block text-sm font-medium text-gray-700 mb-1"
+                      >
+                        {{ option.name }}
+                      </label>
+                      <select
+                        id="Option-{{ section.id }}-{{ forloop.index0 }}"
+                        class="variant-option w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-1 focus:ring-black"
+                      >
+                        {% for value in option.values %}
+                          <option
+                            value="{{ value | escape }}"
+                            {% if option.selected_value == value %}
+                              selected
+                            {% endif %}
+                          >
+                            {{ value }}
+                          </option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  {% endfor %}
+
+                  <script type="application/json" id="VariantData-{{ section.id }}">
+                    {{ product.variants | json }}
+                  </script>
+                </div>
+
+                <script>
+                  (function () {
+                    const sectionId = '{{ section.id }}';
+                    const container = document.querySelector(`.variant-selects[data-section="${sectionId}"]`);
+                    const variantData = JSON.parse(document.getElementById(`VariantData-${sectionId}`).textContent);
+                    const selects = container.querySelectorAll('.variant-option');
+
+                    function updateVariant() {
+                      const selectedOptions = Array.from(selects).map((select) => select.value);
+                      const matchedVariant = variantData.find((variant) => {
+                        return variant.options.every((option, index) => option === selectedOptions[index]);
+                      });
+
+                      if (matchedVariant) {
+                        // Update hidden input
+                        const input = document.querySelector(`#AddToCartForm-${sectionId} input[name="id"]`);
+                        if (input) input.value = matchedVariant.id;
+
+                        // Update price
+                        const priceElement = document.querySelector('.text-2xl.font-medium.text-gray-900');
+                        if (priceElement) {
+                          // Simple formatting fallback
+                          priceElement.innerText = (matchedVariant.price / 100).toLocaleString('en-US', {
+                            style: 'currency',
+                            currency: 'USD',
+                          });
+                        }
+
+                        // Update URL without reload
+                        const url = new URL(window.location);
+                        url.searchParams.set('variant', matchedVariant.id);
+                        window.history.replaceState({}, '', url);
+
+                        // Update button state
+                        const addButton = document.getElementById(`AddToCart-${sectionId}`);
+                        if (addButton) {
+                          if (matchedVariant.available) {
+                            addButton.disabled = false;
+                            addButton.innerText = 'Add to cart';
+                          } else {
+                            addButton.disabled = true;
+                            addButton.innerText = 'Sold out';
+                          }
+                        }
+
+                        // Update Swiper to match variant image
+                        const featuredMedia = matchedVariant.featured_media || matchedVariant.featured_image;
+                        if (featuredMedia && window.productMainSwiper) {
+                          const mediaId = featuredMedia.id;
+                          const slides = document.querySelectorAll('.product-main-swiper .swiper-slide');
+                          const targetIndex = Array.from(slides).findIndex((slide) => slide.dataset.mediaId == mediaId);
+
+                          if (targetIndex !== -1) {
+                            window.productMainSwiper.slideTo(targetIndex);
+                          }
+                        }
+                      }
+                    }
+
+                    selects.forEach((select) => select.addEventListener('change', updateVariant));
+                  })();
+                </script>
+              {% endunless %}
             </div>
 
           {% when 'quantity_selector' %}

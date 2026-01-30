@@ -3,11 +3,7 @@
     return;
   }
 
-  // Inject Swiper CSS
-  const link = document.createElement("link");
-  link.rel = "stylesheet";
-  link.href = "https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css";
-  document.head.appendChild(link);
+
 
   // Inject Swiper JS
   const script = document.createElement("script");
@@ -31,10 +27,13 @@
           spaceBetween: 12,
           slidesPerView: 5,
           watchSlidesProgress: true,
+          centeredSlides: false,
+          slideToClickedSlide: true,
         });
 
-        new Swiper('.product-main-swiper', {
+        const mainSwiper = new Swiper('.product-main-swiper', {
           spaceBetween: 0,
+          loop: false,
           navigation: {
             nextEl: '.swiper-button-next',
             prevEl: '.swiper-button-prev',
@@ -43,6 +42,13 @@
             swiper: thumbSwiper,
           },
         });
+
+        // Store instances for variant switching
+        window.productThumbSwiper = thumbSwiper;
+        window.productMainSwiper = mainSwiper;
+
+
+
       } else {
         setTimeout(initSwiper, 50);
       }
