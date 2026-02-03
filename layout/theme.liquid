@@ -16,9 +16,9 @@
     <script src="{{ 'swiper-init.js' | asset_url }}" defer></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
   </head>
-  <body>
+  <body class="flex flex-col min-h-screen">
     {% section 'header' %}
-    <main role="main">
+    <main role="main" class="flex-1 flex flex-col">
       {{ content_for_layout }}
     </main>
     {% render 'side-cart' %}
