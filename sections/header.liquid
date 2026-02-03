@@ -1,4 +1,4 @@
-{% assign main_menu_linklist = linklists[section.settings.menu].links %}
+{%- comment -%} Removed unused main_menu_linklist variable {%- endcomment -%}
 
 <div class="relative bg-slate-900 border-b border-slate-800" x-data="{ mobileMenuOpen: false }">
   <div class="mx-auto max-w-7xl px-4 sm:px-6">
@@ -84,9 +84,9 @@
       </nav>
 
       <!-- RIGHT ACTIONS -->
-      <div class="hidden md:flex items-center justify-end gap-6 md:flex-1">
+      <div class="hidden md:flex items-center justify-end gap-5 md:flex-1">
         <!-- SEARCH INPUT -->
-        <div class="relative" x-data="searchModule()">
+        <div class="relative group" x-data="searchModule()">
           <div class="relative">
             <input
               type="text"
@@ -94,7 +94,7 @@
               @input="handleSearch()"
               @keydown.enter="navigateToFirstResult()"
               placeholder="Search..."
-              class="w-64 bg-slate-800 text-slate-200 placeholder-slate-400 px-4 py-2 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              class="w-48 lg:w-64 bg-slate-800 text-slate-200 placeholder-slate-400 px-4 py-2 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
             >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -116,7 +116,7 @@
             x-show="searchQuery && (searchResults.length > 0 || isLoading)"
             x-cloak
             x-transition
-            class="absolute top-full right-0 mt-2 w-96 bg-white shadow-xl border border-slate-200 max-h-96 overflow-y-auto z-10"
+            class="absolute top-full right-0 mt-2 w-96 bg-white shadow-xl border border-slate-200 max-h-96 overflow-y-auto z-50 rounded-b-md"
           >
             <!-- LOADING -->
             <div
@@ -146,7 +146,7 @@
                   :alt="product.title"
                   width="48"
                   height="48"
-                  class="w-12 h-12 object-cover"
+                  class="w-12 h-12 object-cover rounded"
                   loading="lazy"
                 >
                 <div class="flex-1 min-w-0">
@@ -158,9 +158,63 @@
           </div>
         </div>
 
+        <!-- ACCOUNT -->
+        {% if shop.customer_accounts_enabled %}
+          <div class="relative" x-data="{ accountOpen: false }">
+            <button
+              @click="accountOpen = !accountOpen"
+              @mouseenter="accountOpen = true"
+              class="flex cursor-pointer items-center text-slate-300 hover:text-white transition py-2"
+              aria-label="Account"
+            >
+              {% render 'icon_user' %}
+            </button>
+
+            <div
+              x-show="accountOpen"
+              x-cloak
+              @mouseleave="accountOpen = false"
+              @click.away="accountOpen = false"
+              x-transition
+              class="absolute right-0 z-50 mt-1 w-48 bg-slate-800 border border-slate-700 shadow-2xl rounded-sm"
+            >
+              <div class="py-2">
+                {% if customer %}
+                  <a
+                    href="{{ routes.account_url }}"
+                    class="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition"
+                  >
+                    My Account
+                  </a>
+                  <a
+                    href="{{ routes.account_logout_url }}"
+                    class="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition"
+                  >
+                    Log out
+                  </a>
+                {% else %}
+                  <a
+                    href="{{ routes.account_login_url }}"
+                    class="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition font-medium"
+                  >
+                    Log in
+                  </a>
+                  <a
+                    href="{{ routes.account_register_url }}"
+                    class="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition"
+                  >
+                    Create account
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- CART -->
         <a
           href="{{ routes.cart_url }}"
-          class="c-header__nav-cart-link c-header__nav-link"
+          class="relative flex items-center text-slate-300 hover:text-white transition p-2"
           aria-label="Cart"
           onclick="event.preventDefault(); openSideCart();"
         >
@@ -170,8 +224,7 @@
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            width="16"
-            class="c-icon-cart"
+            class="w-6 h-6"
           >
             <path
               stroke-linecap="round"
@@ -182,26 +235,11 @@
 
           <sup
             id="CartCount"
-            class="{% if cart.item_count == 0 %}hidden{% endif %}"
+            class="absolute -top-1 -right-1 flex items-center justify-center bg-blue-600 text-white text-[10px] font-bold rounded-full w-4 h-4 {% if cart.item_count == 0 %}hidden{% endif %}"
           >
             {{ cart.item_count }}
           </sup>
         </a>
-
-        {% if shop.customer_accounts_enabled %}
-          <a
-            href="{{ routes.account_login_url }}"
-            class="text-sm font-medium text-slate-300 hover:text-white transition"
-          >
-            Login
-          </a>
-          <a
-            href="{{ routes.account_register_url }}"
-            class="text-sm font-medium text-slate-300 hover:text-white transition"
-          >
-            Sign up
-          </a>
-        {% endif %}
       </div>
     </div>
   </div>
@@ -277,6 +315,48 @@
             {% endfor %}
           </nav>
         </div>
+
+        <!-- MOBILE ACCOUNT -->
+        {% if shop.customer_accounts_enabled %}
+          <div class="pt-6 mt-6 border-t border-slate-700">
+            {% if customer %}
+              <div class="flex items-center gap-3 px-3 mb-4">
+                <div class="w-10 h-10 bg-slate-700 rounded-full flex items-center justify-center text-white">
+                  {% render 'icon_user' %}
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-white">{{ customer.first_name | default: 'Customer' }}</p>
+                  <p class="text-xs text-slate-400">{{ customer.email }}</p>
+                </div>
+              </div>
+              <a
+                href="{{ routes.account_url }}"
+                class="block px-3 py-2 text-base font-medium text-slate-300 hover:text-white transition"
+              >
+                My Account
+              </a>
+              <a
+                href="{{ routes.account_logout_url }}"
+                class="block px-3 py-2 text-base font-medium text-slate-300 hover:text-white transition"
+              >
+                Log out
+              </a>
+            {% else %}
+              <a
+                href="{{ routes.account_login_url }}"
+                class="block px-3 py-2 text-base font-medium text-slate-300 hover:text-white transition"
+              >
+                Log in
+              </a>
+              <a
+                href="{{ routes.account_register_url }}"
+                class="block px-3 py-2 text-base font-medium text-slate-300 hover:text-white transition"
+              >
+                Create account
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>
