@@ -1,0 +1,141 @@
+{%- unless template == 'index' -%}
+  {%- assign t = template | split: '.' | first -%}
+
+  <nav class="breadcrumb" role="navigation" aria-label="breadcrumbs">
+    <div class="breadcrumb-container">
+      <ol class="breadcrumb-list">
+        <li class="breadcrumb-item">
+          <a href="/" title="Home" class="breadcrumb-link">Home</a>
+        </li>
+
+        {%- case t -%}
+          {%- when 'page' -%}
+            <li class="breadcrumb-separator" aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="currentColor" class="breadcrumb-icon">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+              </svg>
+            </li>
+            <li class="breadcrumb-item text-gray-900 font-medium">
+              <span class="breadcrumb-current" aria-current="page">{{ page.title }}</span>
+            </li>
+
+          {%- when 'product' -%}
+            {%- if collection.url -%}
+              <li class="breadcrumb-separator" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="currentColor" class="breadcrumb-icon">
+                  <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                </svg>
+              </li>
+              <li class="breadcrumb-item">
+                {{ collection.title | link_to: collection.url, class: 'breadcrumb-link' }}
+              </li>
+            {%- endif -%}
+            <li class="breadcrumb-separator" aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="currentColor" class="breadcrumb-icon">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+              </svg>
+            </li>
+            <li class="breadcrumb-item">
+              <span class="breadcrumb-current" aria-current="page">{{ product.title }}</span>
+            </li>
+
+          {%- when 'collection' and collection.handle -%}
+            <li class="breadcrumb-separator" aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="currentColor" class="breadcrumb-icon">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+              </svg>
+            </li>
+            {%- if current_tags -%}
+              <li class="breadcrumb-item">
+                {{ collection.title | link_to: collection.url, class: 'breadcrumb-link' }}
+              </li>
+              <li class="breadcrumb-separator" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="currentColor" class="breadcrumb-icon">
+                  <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                </svg>
+              </li>
+              <li class="breadcrumb-item">
+                <span class="breadcrumb-current" aria-current="page">{{ current_tags | join: ' + ' }}</span>
+              </li>
+            {%- else -%}
+              <li class="breadcrumb-item">
+                <span class="breadcrumb-current" aria-current="page">{{ collection.title }}</span>
+              </li>
+            {%- endif -%}
+
+          {%- when 'blog' -%}
+            <li class="breadcrumb-separator" aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="currentColor" class="breadcrumb-icon">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+              </svg>
+            </li>
+            {%- if current_tags -%}
+              <li class="breadcrumb-item">
+                {{ blog.title | link_to: blog.url, class: 'breadcrumb-link' }}
+              </li>
+              <li class="breadcrumb-separator" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="currentColor" class="breadcrumb-icon">
+                  <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                </svg>
+              </li>
+              <li class="breadcrumb-item">
+                <span class="breadcrumb-current" aria-current="page">{{ current_tags | join: ' + ' }}</span>
+              </li>
+            {%- else -%}
+              <li class="breadcrumb-item">
+                <span class="breadcrumb-current" aria-current="page">{{ blog.title }}</span>
+              </li>
+            {%- endif -%}
+
+          {%- when 'article' -%}
+            <li class="breadcrumb-separator" aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="currentColor" class="breadcrumb-icon">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+              </svg>
+            </li>
+            <li class="breadcrumb-item">
+              {{ blog.title | link_to: blog.url, class: 'breadcrumb-link' }}
+            </li>
+            <li class="breadcrumb-separator" aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="currentColor" class="breadcrumb-icon">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+              </svg>
+            </li>
+            <li class="breadcrumb-item">
+              <span class="breadcrumb-current" aria-current="page">{{ article.title }}</span>
+            </li>
+
+          {%- when 'list-collections' -%}
+            <li class="breadcrumb-separator" aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="currentColor" class="breadcrumb-icon">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+              </svg>
+            </li>
+            <li class="breadcrumb-item">
+              <span class="breadcrumb-current" aria-current="page">Collections</span>
+            </li>
+
+          {%- when 'search' -%}
+            <li class="breadcrumb-separator" aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="currentColor" class="breadcrumb-icon">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+              </svg>
+            </li>
+            <li class="breadcrumb-item">
+              <span class="breadcrumb-current" aria-current="page">Search</span>
+            </li>
+
+          {%- else -%}
+            <li class="breadcrumb-separator" aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="currentColor" class="breadcrumb-icon">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+              </svg>
+            </li>
+            <li class="breadcrumb-item">
+              <span class="breadcrumb-current" aria-current="page">{{ page_title }}</span>
+            </li>
+        {%- endcase -%}
+      </ol>
+    </div>
+  </nav>
+{%- endunless -%}
