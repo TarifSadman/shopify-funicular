@@ -13,7 +13,11 @@
       "type": "template-blog",
       "settings": {
         "blog_read_more": "Read more",
+<<<<<<< HEAD
         "number_of_blog_posts": 6
+=======
+        "number_of_blog_posts": 3
+>>>>>>> 5c541d26912ec03c002b083b39e7590cfcc1f7ec
       }
     }
   },
