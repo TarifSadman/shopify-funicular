@@ -13,7 +13,7 @@
       "type": "template-blog",
       "settings": {
         "blog_read_more": "Read more",
-        "number_of_blog_posts": 1
+        "number_of_blog_posts": 3
       }
     }
   },
