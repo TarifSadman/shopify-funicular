@@ -15,17 +15,6 @@
         </a>
       </div>
 
-      <!-- MOBILE HAMBURGER -->
-      <div class="md:hidden">
-        <button
-          x-on:click="mobileMenuOpen = !mobileMenuOpen"
-          type="button"
-          class="inline-flex items-center justify-center p-2 text-slate-400 hover:bg-slate-800 hover:text-white focus:outline-none"
-        >
-          {% render 'icon_hamburger' %}
-        </button>
-      </div>
-
       <!-- DESKTOP NAV -->
       <nav class="hidden md:flex items-center space-x-8">
         {% for link in linklists['main-menu'].links %}
@@ -62,7 +51,7 @@
                     {% for childlink in link.links %}
                       <a
                         href="{{ childlink.url }}"
-                        class="px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition"
+                        class="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition"
                       >
                         {{ childlink.title }}
                       </a>
@@ -84,9 +73,9 @@
       </nav>
 
       <!-- RIGHT ACTIONS -->
-      <div class="hidden md:flex items-center justify-end gap-5 md:flex-1">
-        <!-- SEARCH INPUT -->
-        <div class="relative group" x-data="searchModule()">
+      <div class="flex items-center justify-end gap-3 md:gap-5 md:flex-1">
+        <!-- SEARCH INPUT (Desktop Only) -->
+        <div class="hidden md:block relative group" x-data="searchModule()">
           <div class="relative">
             <input
               type="text"
@@ -240,6 +229,17 @@
             {{ cart.item_count }}
           </sup>
         </a>
+
+        <!-- MOBILE HAMBURGER -->
+        <div class="md:hidden">
+          <button
+            x-on:click="mobileMenuOpen = !mobileMenuOpen"
+            type="button"
+            class="inline-flex items-center justify-center p-2 text-slate-400 hover:bg-slate-800 hover:text-white focus:outline-none"
+          >
+            {% render 'icon_hamburger' %}
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -285,11 +285,13 @@
                     <svg
                       class="w-4 h-4 transition-transform"
                       :class="{ 'rotate-180': {{ link_handle }} }"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 -19.04 75.804 75.804"
+                      fill="currentColor"
                     >
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                      <path
+                        d="M0.003,1.499A1.5,1.5,0,0,1,2.564.439L36.124,34a2.528,2.528,0,0,0,3.564,0L73.246.439a1.5,1.5,0,1,1,2.121,2.121L41.809,36.117a5.53,5.53,0,0,1-7.807,0L.442,2.56A1.5,1.5,0,0,1,.003,1.499Z"
+                      />
                     </svg>
                   </button>
 
@@ -315,48 +317,6 @@
             {% endfor %}
           </nav>
         </div>
-
-        <!-- MOBILE ACCOUNT -->
-        {% if shop.customer_accounts_enabled %}
-          <div class="pt-6 mt-6 border-t border-slate-700">
-            {% if customer %}
-              <div class="flex items-center gap-3 px-3 mb-4">
-                <div class="w-10 h-10 bg-slate-700 rounded-full flex items-center justify-center text-white">
-                  {% render 'icon_user' %}
-                </div>
-                <div>
-                  <p class="text-sm font-medium text-white">{{ customer.first_name | default: 'Customer' }}</p>
-                  <p class="text-xs text-slate-400">{{ customer.email }}</p>
-                </div>
-              </div>
-              <a
-                href="{{ routes.account_url }}"
-                class="block px-3 py-2 text-base font-medium text-slate-300 hover:text-white transition"
-              >
-                My Account
-              </a>
-              <a
-                href="{{ routes.account_logout_url }}"
-                class="block px-3 py-2 text-base font-medium text-slate-300 hover:text-white transition"
-              >
-                Log out
-              </a>
-            {% else %}
-              <a
-                href="{{ routes.account_login_url }}"
-                class="block px-3 py-2 text-base font-medium text-slate-300 hover:text-white transition"
-              >
-                Log in
-              </a>
-              <a
-                href="{{ routes.account_register_url }}"
-                class="block px-3 py-2 text-base font-medium text-slate-300 hover:text-white transition"
-              >
-                Create account
-              </a>
-            {% endif %}
-          </div>
-        {% endif %}
       </div>
     </div>
   </div>
