@@ -1,0 +1,26 @@
+<div id="SideWishlist" class="side-cart">
+  <div class="side-cart__overlay" onclick="closeWishlist()"></div>
+  <div class="side-cart__panel">
+    <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+      <h2 class="text-xl font-bold text-gray-900">My Wishlist</h2>
+      <button onclick="closeWishlist()" class="text-gray-400 hover:text-gray-900 transition">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <div id="WishlistContent" class="flex-1 overflow-y-auto p-6">
+      <!-- Dynamic content from JS -->
+      <div class="text-center py-20 text-gray-400">
+        <p>Your wishlist is empty</p>
+      </div>
+    </div>
+  </div>
+</div>

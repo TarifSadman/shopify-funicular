@@ -1,107 +1,154 @@
 {% assign current_variant = product.selected_or_first_available_variant %}
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+<div
+  class="max-w-7xl mx-auto px-4 sm:px-6 py-8"
+  data-section-type="main-product-redesign"
+  data-section-id="{{ section.id }}"
+  data-cart-currency="{{ cart.currency.iso_code }}"
+>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
     <!-- Image Section -->
-    <div class="product-images">
-      <!-- Main Swiper -->
-      <div class="swiper product-main-swiper border bg-white overflow-hidden">
-        <div class="swiper-wrapper">
-          {% for media in product.media %}
-            <div class="swiper-slide" data-media-id="{{ media.id }}">
-              {% if media.media_type == 'image' %}
+    <div class="product-images lg:sticky lg:top-8 lg:self-start">
+      <div class="relative group">
+        <!-- Main Swiper -->
+        <div
+          id="ProductMedia-{{ section.id }}"
+          class="swiper product-main-swiper-v2 rounded-3xl overflow-hidden bg-gray-50"
+        >
+          <div class="swiper-wrapper">
+            {% for media in product.media %}
+              <div class="swiper-slide h-auto" data-media-id="{{ media.id }}">
                 <img
-                  src="{{ media.preview_image | image_url: width: 800 }}"
+                  src="{{ media.preview_image | image_url: width: 1000 }}"
                   alt="{{ media.alt | escape }}"
-                  width="800"
-                  height="800"
-                  class="w-full h-full object-contain"
-                  loading="lazy"
-                >
-              {% else %}
-                {{ media | media_tag: class: 'w-full h-full object-contain' }}
-              {% endif %}
-            </div>
-          {% endfor %}
-        </div>
-        <!-- Custom Navigation -->
-        <div class="swiper-button-next custom-swiper-nav">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-8 h-8">
-            <path d="M10 20A10 10 0 1 0 0 10a10 10 0 0 0 10 10zM8.711 4.3l5.7 5.766L8.7 15.711l-1.4-1.422 4.289-4.242-4.3-4.347z"/>
-          </svg>
-        </div>
-        <div class="swiper-button-prev custom-swiper-nav">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-8 h-8 rotate-180">
-            <path d="M10 20A10 10 0 1 0 0 10a10 10 0 0 0 10 10zM8.711 4.3l5.7 5.766L8.7 15.711l-1.4-1.422 4.289-4.242-4.3-4.347z"/>
-          </svg>
-        </div>
-      </div>
-
-      <div class="swiper product-thumb-swiper mt-4">
-        <div class="swiper-wrapper">
-          {% for media in product.media %}
-            <div class="swiper-slide cursor-pointer" data-media-id="{{ media.id }}">
-              <div class="border overflow-hidden shrink-0">
-                <img
-                  src="{{ media.preview_image | image_url: width: 200 }}"
-                  alt="{{ media.alt | escape }}"
-                  width="200"
-                  height="200"
-                  class="w-full aspect-square object-cover"
-                  loading="lazy"
+                  width="1000"
+                  height="1200"
+                  class="w-full h-full object-cover aspect-[4/5]"
+                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
                 >
               </div>
-            </div>
+            {% endfor %}
+          </div>
+
+          <!-- Navigation Arrows -->
+          <div class="swiper-button-next">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 16L16 12M16 12L12 8M16 12H8M7.8 21H16.2C17.8802 21 18.7202 21 19.362 20.673C19.9265 20.3854 20.3854 19.9265 20.673 19.362C21 18.7202 21 17.8802 21 16.2V7.8C21 6.11984 21 5.27976 20.673 4.63803C20.3854 4.07354 19.9265 3.6146 19.362 3.32698C18.7202 3 17.8802 3 16.2 3H7.8C6.11984 3 5.27976 3 4.63803 3.32698C4.07354 3.6146 3.6146 4.07354 3.32698 4.63803C3 5.27976 3 6.11984 3 7.8V16.2C3 17.8802 3 18.7202 3.32698 19.362C3.6146 19.9265 4.07354 20.3854 4.63803 20.673C5.27976 21 6.11984 21 7.8 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="swiper-button-prev">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 8L8 12M8 12L12 16M8 12H16M7.8 21H16.2C17.8802 21 18.7202 21 19.362 20.673C19.9265 20.3854 20.3854 19.9265 20.673 19.362C21 18.7202 21 17.8802 21 16.2V7.8C21 6.11984 21 5.27976 20.673 4.63803C20.3854 4.07354 19.9265 3.6146 19.362 3.32698C18.7202 3 17.8802 3 16.2 3H7.8C6.11984 3 5.27976 3 4.63803 3.32698C4.07354 3.6146 3.6146 4.07354 3.32698 4.63803C3 5.27976 3 6.11984 3 7.8V16.2C3 17.8802 3 18.7202 3.32698 19.362C3.6146 19.9265 4.07354 20.3854 4.63803 20.673C5.27976 21 6.11984 21 7.8 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Thumbnails Overlay/Below -->
+        <div class="flex gap-3 mt-6 justify-center">
+          {% for media in product.media %}
+            <button
+              class="w-20 h-24 rounded-2xl overflow-hidden border-2 transition-all thumb-btn {% if forloop.first %}border-black{% else %}border-transparent opacity-60{% endif %}"
+              data-index="{{ forloop.index0 }}"
+            >
+              <img
+                src="{{ media.preview_image | image_url: width: 200 }}"
+                alt="{{ media.alt | escape }}"
+                width="200"
+                height="240"
+                class="w-full h-full object-cover"
+                loading="lazy"
+              >
+            </button>
           {% endfor %}
         </div>
       </div>
     </div>
 
+    <!-- Info Section -->
     <div class="flex flex-col">
       {% for block in section.blocks %}
         {% case block.type %}
-          {% when '@app' %}
-            {% render block %}
-
           {% when 'title' %}
-            <h1 class="text-3xl font-semibold text-gray-900" {{ block.shopify_attributes }}>
-              {{ product.title }}
-            </h1>
+            <div class="mb-4" {{ block.shopify_attributes }}>
+              {% comment %}
+                {% assign category = product.metafields.custom.category.value | default: product.vendor %}
+                {% if category != blank %}
+                  <p class="text-[12px] font-bold uppercase tracking-[0.2em] text-gray-900 mb-4 opacity-80">
+                    {{ category }}
+                  </p>
+                {% endif %}
+              {% endcomment %}
+
+              <h1 class="text-5xl font-light uppercase tracking-tighter text-gray-900 leading-[1.1]">
+                {{ product.title }}
+              </h1>
+            </div>
 
           {% when 'price' %}
-            <div class="mt-3" {{ block.shopify_attributes }}>
-              <p class="text-2xl font-medium text-gray-900">
+            <div class="mb-10 flex items-center gap-4 flex-wrap" {{ block.shopify_attributes }}>
+              <p id="ProductPrice-{{ section.id }}" class="text-4xl font-bold text-black leading-none tracking-tight">
                 {{ current_variant.price | money }}
               </p>
+
+              <div class="flex items-center gap-3">
+                {% if current_variant.compare_at_price > current_variant.price %}
+                  <p id="ComparePrice-{{ section.id }}" class="text-lg text-gray-400 line-through leading-none">
+                    {{ current_variant.compare_at_price | money }}
+                  </p>
+                  {% assign savings = current_variant.compare_at_price
+                    | minus: current_variant.price
+                    | times: 100.0
+                    | divided_by: current_variant.compare_at_price
+                    | round
+                  %}
+                  <span
+                    id="DiscountBadge-{{ section.id }}"
+                    class="bg-[#FFF1EF] text-[#FF5C3F] px-2.5 py-1 rounded text-[11px] font-bold uppercase tracking-wider"
+                  >
+                    {{ savings }}%
+                  </span>
+                {% else %}
+                  <p
+                    id="ComparePrice-{{ section.id }}"
+                    class="text-lg text-gray-400 line-through leading-none hidden"
+                  ></p>
+                  <span
+                    id="DiscountBadge-{{ section.id }}"
+                    class="bg-[#FFF1EF] text-[#FF5C3F] px-2.5 py-1 rounded text-[11px] font-bold uppercase tracking-wider hidden"
+                  ></span>
+                {% endif %}
+              </div>
             </div>
 
           {% when 'variant_selector' %}
-            <div class="mt-6" {{ block.shopify_attributes }}>
+            <div class="mb-8" {{ block.shopify_attributes }}>
               {% unless product.has_only_default_variant %}
                 <div class="variant-selects" data-section="{{ section.id }}">
                   {% for option in product.options_with_values %}
-                    <div class="mb-4">
-                      <label
-                        for="Option-{{ section.id }}-{{ forloop.index0 }}"
-                        class="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        {{ option.name }}
-                      </label>
-                      <select
-                        id="Option-{{ section.id }}-{{ forloop.index0 }}"
-                        class="variant-option w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-1 focus:ring-black"
-                      >
+                    <div class="mb-6">
+                      <label class="block text-sm font-semibold text-gray-900 mb-3"> Select {{ option.name }} </label>
+                      <div class="flex flex-wrap gap-2">
                         {% for value in option.values %}
-                          <option
-                            value="{{ value | escape }}"
-                            {% if option.selected_value == value %}
-                              selected
-                            {% endif %}
-                          >
-                            {{ value }}
-                          </option>
+                          <div class="size-swatch">
+                            <input
+                              type="radio"
+                              id="Option-{{ section.id }}-{{ forloop.parentloop.index0 }}-{{ forloop.index0 }}"
+                              name="options[{{ option.name }}]"
+                              value="{{ value | escape }}"
+                              class="hidden variant-option-input"
+                              {% if option.selected_value == value %}
+                                checked
+                              {% endif %}
+                            >
+                            <label
+                              for="Option-{{ section.id }}-{{ forloop.parentloop.index0 }}-{{ forloop.index0 }}"
+                              class="min-w-[60px] h-12 flex items-center justify-center rounded-full border border-gray-200 text-sm font-medium cursor-pointer bg-gray-50 text-gray-900"
+                            >
+                              {{ value }}
+                            </label>
+                          </div>
                         {% endfor %}
-                      </select>
+                      </div>
                     </div>
                   {% endfor %}
 
@@ -109,155 +156,246 @@
                     {{ product.variants | json }}
                   </script>
                 </div>
-
-                <script>
-                  (function () {
-                    const sectionId = '{{ section.id }}';
-                    const container = document.querySelector(`.variant-selects[data-section="${sectionId}"]`);
-                    const variantData = JSON.parse(document.getElementById(`VariantData-${sectionId}`).textContent);
-                    const selects = container.querySelectorAll('.variant-option');
-
-                    function updateVariant() {
-                      const selectedOptions = Array.from(selects).map((select) => select.value);
-                      const matchedVariant = variantData.find((variant) => {
-                        return variant.options.every((option, index) => option === selectedOptions[index]);
-                      });
-
-                      if (matchedVariant) {
-                        // Update hidden input
-                        const input = document.querySelector(`#AddToCartForm-${sectionId} input[name="id"]`);
-                        if (input) input.value = matchedVariant.id;
-
-                        // Update price
-                        const priceElement = document.querySelector('.text-2xl.font-medium.text-gray-900');
-                        if (priceElement) {
-                          // Simple formatting fallback
-                          priceElement.innerText = (matchedVariant.price / 100).toLocaleString('en-US', {
-                            style: 'currency',
-                            currency: 'USD',
-                          });
-                        }
-
-                        // Update URL without reload
-                        const url = new URL(window.location);
-                        url.searchParams.set('variant', matchedVariant.id);
-                        window.history.replaceState({}, '', url);
-
-                        // Update button state
-                        const addButton = document.getElementById(`AddToCart-${sectionId}`);
-                        if (addButton) {
-                          if (matchedVariant.available) {
-                            addButton.disabled = false;
-                            addButton.innerText = 'Add to cart';
-                          } else {
-                            addButton.disabled = true;
-                            addButton.innerText = 'Sold out';
-                          }
-                        }
-
-                        // Update Swiper to match variant image
-                        const featuredMedia = matchedVariant.featured_media || matchedVariant.featured_image;
-                        if (featuredMedia && window.productMainSwiper) {
-                          const mediaId = featuredMedia.id;
-                          const slides = document.querySelectorAll('.product-main-swiper .swiper-slide');
-                          const targetIndex = Array.from(slides).findIndex((slide) => slide.dataset.mediaId == mediaId);
-
-                          if (targetIndex !== -1) {
-                            window.productMainSwiper.slideTo(targetIndex);
-                          }
-                        }
-                      }
-                    }
-
-                    selects.forEach((select) => select.addEventListener('change', updateVariant));
-                  })();
-                </script>
               {% endunless %}
             </div>
 
-          {% when 'quantity_selector' %}
-            <div class="mt-6 flex items-center gap-4" {{ block.shopify_attributes }}>
-              <label for="Quantity-{{ section.id }}" class="text-sm font-medium text-gray-700"> Qty </label>
-              <input
-                type="number"
-                id="Quantity-{{ section.id }}"
-                name="quantity"
-                value="1"
-                min="1"
-                class="w-20 border px-3 py-2 text-center focus:outline-none focus:ring-2 focus:ring-black"
-                form="AddToCartForm-{{ section.id }}"
-              >
+          {% when 'quantity_selection' %}
+            <div class="mb-6" {{ block.shopify_attributes }}>
+              <label class="block text-sm font-semibold text-gray-900 mb-3">Quantity</label>
+              <div class="inline-flex items-center border border-gray-200 rounded-full p-1 bg-gray-50">
+                <button
+                  type="button"
+                  onclick="const input = this.parentNode.querySelector('input'); input.stepDown(); input.dispatchEvent(new Event('change'));"
+                  class="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-black hover:bg-white rounded-full transition"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                  </svg>
+                </button>
+                <input
+                  type="number"
+                  name="quantity"
+                  value="1"
+                  min="1"
+                  form="AddToCartForm"
+                  class="w-12 text-center bg-transparent border-none focus:ring-0 text-sm font-bold text-gray-900"
+                >
+                <button
+                  type="button"
+                  onclick="const input = this.parentNode.querySelector('input'); input.stepUp(); input.dispatchEvent(new Event('change'));"
+                  class="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-black hover:bg-white rounded-full transition"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                  </svg>
+                </button>
+              </div>
             </div>
 
           {% when 'buy_buttons' %}
-            <div class="mt-8" {{ block.shopify_attributes }}>
+            <div class="mb-10 flex gap-3" {{ block.shopify_attributes }}>
               <form
-                id="AddToCartForm-{{ section.id }}"
+                id="AddToCartForm"
                 action="{{ routes.cart_add_url }}"
                 method="post"
                 enctype="multipart/form-data"
+                class="flex-1"
               >
                 <input type="hidden" name="id" value="{{ current_variant.id }}">
                 <button
                   type="submit"
                   name="add"
                   id="AddToCart-{{ section.id }}"
-                  class="w-full bg-black text-white py-4 text-lg font-semibold hover:bg-gray-900 transition"
+                  class="w-full bg-[#111] text-white py-5 rounded-full text-base font-bold hover:bg-black transition-all shadow-lg active:scale-95"
                   {% unless current_variant.available %}
                     disabled
                   {% endunless %}
                 >
-                  {% if current_variant.available %}Add to cart{% else %}Sold out{% endif %}
+                  {% if current_variant.available %}Add to Cart{% else %}Sold Out{% endif %}
                 </button>
               </form>
+              <button
+                class="w-14 h-14 rounded-full border border-gray-200 flex items-center justify-center text-gray-900 hover:bg-gray-50 transition active:scale-90"
+                data-wishlist-handle="{{ product.handle }}"
+                onclick="toggleWishlist('{{ product.handle }}', this)"
+                aria-label="Add to wishlist"
+              >
+                {% render 'icon_heart', class: 'h-6 w-6', fill: false %}
+              </button>
             </div>
 
           {% when 'description' %}
-            <div class="mt-12" {{ block.shopify_attributes }}>
-              <h2 class="text-xl font-semibold mb-4">Product Details</h2>
-              <div class="prose prose-gray max-w-none">
-                {{ product.description }}
-              </div>
+            <div class="border-t border-gray-100" {{ block.shopify_attributes }}>
+              <details class="py-6 group" open>
+                <summary class="flex justify-between items-center cursor-pointer list-none">
+                  <span class="text-lg font-bold text-gray-900">Description & Fit</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 transition group-open:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+                <div class="mt-4 prose prose-sm text-gray-500 leading-relaxed max-w-none">
+                  {{ product.description }}
+                </div>
+              </details>
+
+              <details class="py-6 border-t border-gray-100 group">
+                <summary class="flex justify-between items-center cursor-pointer list-none">
+                  <span class="text-lg font-bold text-gray-900">Shipping</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 transition group-open:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+                <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div class="shipping-grid-item">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12.75 3a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0V3zM18.75 4.875a.75.75 0 0 0-1.06-1.06L16.63 4.875a.75.75 0 0 0 1.06 1.06l1.06-1.06zM21 11.25a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H21zM18.75 18.06a.75.75 0 0 0 1.06-1.06L18.75 15.94a.75.75 0 0 0-1.06 1.06l1.06 1.06zM12.75 21a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0V21zM5.25 18.06l-1.06 1.06a.75.75 0 0 0 1.06 1.06l1.06-1.06a.75.75 0 0 0-1.06-1.06zM1.5 12a.75.75 0 0 0 0 1.5H3a.75.75 0 0 0 0-1.5H1.5zM5.25 4.875 4.19 3.815a.75.75 0 0 0-1.06 1.06l1.06 1.06a.75.75 0 0 0 1.06-1.06zM12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9z"/>
+                    </svg>
+                    <div>
+                      <p class="text-[10px] text-gray-400 uppercase font-bold tracking-widest leading-none mb-1">
+                        Discount
+                      </p>
+                      <p class="text-xs font-bold text-gray-900 leading-none">Disc 50%</p>
+                    </div>
+                  </div>
+                  <div class="shipping-grid-item">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12.378 1.602a.75.75 0 0 0-.756 0L3 6.632l9 5.25 9-5.25-8.622-5.03zM21.75 7.93l-9 5.25v9l8.628-5.032a.75.75 0 0 0 .372-.648V7.93zM11.25 22.18v-9l-9-5.25v8.57a.75.75 0 0 0 .372.648l8.628 5.033z"/>
+                    </svg>
+                    <div>
+                      <p class="text-[10px] text-gray-400 uppercase font-bold tracking-widest leading-none mb-1">
+                        Package
+                      </p>
+                      <p class="text-xs font-bold text-gray-900 leading-none">Regular Package</p>
+                    </div>
+                  </div>
+                  <div class="shipping-grid-item">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12.75 12.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0z"/><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM6.262 6.072a8.25 8.25 0 1 0 11.476 11.476L6.262 6.072z" clip-rule="evenodd"/>
+                    </svg>
+                    <div>
+                      <p class="text-[10px] text-gray-400 uppercase font-bold tracking-widest leading-none mb-1">
+                        Delivery Time
+                      </p>
+                      <p class="text-xs font-bold text-gray-900 leading-none">3-4 Working Days</p>
+                    </div>
+                  </div>
+                  <div class="shipping-grid-item">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375z"/><path fill-rule="evenodd" d="m3.087 9 1.414 9c.108.69.7 1.2 1.4 1.2h12.198c.7 0 1.292-.51 1.4-1.2L20.913 9H3.087zM8.25 10.5a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0v-3.75a.75.75 0 0 1 .75-.75zM12 10.5a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0v-3.75a.75.75 0 0 1 .75-.75zm3.75.75a.75.75 0 0 0-1.5 0v3.75a.75.75 0 0 0 1.5 0v-3.75z" clip-rule="evenodd"/>
+                    </svg>
+                    <div>
+                      <p class="text-[10px] text-gray-400 uppercase font-bold tracking-widest leading-none mb-1">
+                        Estimation Arrive
+                      </p>
+                      <p class="text-xs font-bold text-gray-900 leading-none">10-12 Oct 2024</p>
+                    </div>
+                  </div>
+                </div>
+              </details>
             </div>
 
           {% when 'faq' %}
             {% assign faq_questions = product.metafields.custom.faq_questions.value %}
             {% assign faq_answers = product.metafields.custom.faq_answers.value %}
             {% if faq_questions != blank %}
-              <div class="mt-16" {{ block.shopify_attributes }}>
-                <h2 class="text-xl font-semibold mb-6">Frequently Asked Questions</h2>
-                <div class="divide-y border-t">
-                  {% for question in faq_questions %}
-                    {% assign index = forloop.index0 %}
-                    {% assign answer = faq_answers[index] %}
-                    <details class="py-4 group">
-                      <summary class="flex justify-between items-center cursor-pointer text-gray-900 font-medium">
-                        <span>{{ question }}</span>
-                        <span class="transition group-open:rotate-180">⌄</span>
-                      </summary>
-                      <div class="mt-3 text-gray-600 leading-relaxed">
-                        {{ answer }}
-                      </div>
-                    </details>
-                  {% endfor %}
-                </div>
+              <div class="border-t border-gray-100" {{ block.shopify_attributes }}>
+                <details class="py-6 group">
+                  <summary class="flex justify-between items-center cursor-pointer list-none">
+                    <span class="text-lg font-bold text-gray-900">FAQ</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5 transition group-open:rotate-180"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </summary>
+                  <div class="mt-6 divide-y divide-gray-100 border-t border-gray-50">
+                    {% for question in faq_questions %}
+                      {% assign index = forloop.index0 %}
+                      {% assign answer = faq_answers[index] %}
+                      <details class="py-4 group/faq">
+                        <summary class="flex justify-between items-center cursor-pointer list-none">
+                          <span class="text-base font-semibold text-gray-800">{{ question }}</span>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-4 w-4 text-gray-400 transition group-open/faq:rotate-180"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </summary>
+                        <div class="mt-3 text-sm text-gray-500 leading-relaxed">
+                          {{ answer }}
+                        </div>
+                      </details>
+                    {% endfor %}
+                  </div>
+                </details>
               </div>
             {% endif %}
 
-          {% when 'tags' %}
-            {% if product.tags.size > 0 %}
-              <div class="mt-2 flex flex-wrap gap-2" {{ block.shopify_attributes }}>
-                {% for tag in product.tags %}
-                  <span class="inline-flex items-center px-2.5 py-0.5 text-xs font-medium bg-red-100 text-red-800">
-                    {{ tag }}
-                  </span>
-                {% endfor %}
-              </div>
-            {% endif %}
+            {% comment %}
+              {% when 'tags' %}
+              {% if product.tags.size > 0 %}
+                <div class="mt-8 flex flex-wrap gap-2" {{ block.shopify_attributes }}>
+                  {% for tag in product.tags %}
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-600">
+                      {{ tag }}
+                    </span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endcomment %}
         {% endcase %}
       {% endfor %}
     </div>
   </div>
+
+  <!-- Related Products Section -->
+  {% assign related_collection = product.collections.first %}
+  {% if related_collection %}
+    <div class="mt-24 border-t border-gray-100 pt-16">
+      <h2 class="text-3xl font-bold text-gray-900 mb-12">Related Products</h2>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {% assign count = 0 %}
+        {% for rel_product in related_collection.products %}
+          {% if rel_product.id != product.id and count < 4 %}
+            {% render 'product-card', product: rel_product %}
+            {% assign count = count | plus: 1 %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
 </div>
 
 {% schema %}
@@ -284,7 +422,7 @@
       "limit": 1
     },
     {
-      "type": "quantity_selector",
+      "type": "quantity_selection",
       "name": "Quantity Selector",
       "limit": 1
     },
@@ -295,29 +433,28 @@
     },
     {
       "type": "description",
-      "name": "Description",
-      "limit": 1
-    },
-    {
-      "type": "faq",
-      "name": "FAQ",
+      "name": "Description & Details",
       "limit": 1
     },
     {
       "type": "tags",
       "name": "Tags",
       "limit": 1
+    },
+    {
+      "type": "faq",
+      "name": "FAQ",
+      "limit": 1
     }
   ],
   "presets": [
     {
-      "name": "Main Product",
+      "name": "Main Product Redesign",
       "blocks": [
         { "type": "title" },
-        { "type": "tags" },
         { "type": "price" },
         { "type": "variant_selector" },
-        { "type": "quantity_selector" },
+        { "type": "quantity_selection" },
         { "type": "buy_buttons" },
         { "type": "description" },
         { "type": "faq" }
