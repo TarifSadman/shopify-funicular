@@ -126,7 +126,7 @@
                 <div class="variant-selects" data-section="{{ section.id }}">
                   {% for option in product.options_with_values %}
                     <div class="mb-6">
-                      <label class="block text-sm font-semibold text-gray-900 mb-3"> Select {{ option.name }} </label>
+                      <label class="block text-sm font-semibold text-gray-900 mb-3"> Select Size </label>
                       <div class="flex flex-wrap gap-2">
                         {% for value in option.values %}
                           <div class="size-swatch">
@@ -256,66 +256,25 @@
                 </div>
               </details>
 
-              <details class="py-6 border-t border-gray-100 group">
-                <summary class="flex justify-between items-center cursor-pointer list-none">
-                  <span class="text-lg font-bold text-gray-900">Shipping</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5 transition group-open:rotate-180"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </summary>
-                <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div class="shipping-grid-item">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12.75 3a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0V3zM18.75 4.875a.75.75 0 0 0-1.06-1.06L16.63 4.875a.75.75 0 0 0 1.06 1.06l1.06-1.06zM21 11.25a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H21zM18.75 18.06a.75.75 0 0 0 1.06-1.06L18.75 15.94a.75.75 0 0 0-1.06 1.06l1.06 1.06zM12.75 21a.75.75 0 0 0-1.5 0v1.5a.75.75 0 0 0 1.5 0V21zM5.25 18.06l-1.06 1.06a.75.75 0 0 0 1.06 1.06l1.06-1.06a.75.75 0 0 0-1.06-1.06zM1.5 12a.75.75 0 0 0 0 1.5H3a.75.75 0 0 0 0-1.5H1.5zM5.25 4.875 4.19 3.815a.75.75 0 0 0-1.06 1.06l1.06 1.06a.75.75 0 0 0 1.06-1.06zM12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9z"/>
+              {% if product.metafields.custom.composition_care != blank %}
+                <details class="py-6 border-t border-gray-100 group">
+                  <summary class="flex justify-between items-center cursor-pointer list-none">
+                    <span class="text-lg font-bold text-gray-900">Composition & Care</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5 transition group-open:rotate-180"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                     </svg>
-                    <div>
-                      <p class="text-[10px] text-gray-400 uppercase font-bold tracking-widest leading-none mb-1">
-                        Discount
-                      </p>
-                      <p class="text-xs font-bold text-gray-900 leading-none">Disc 50%</p>
-                    </div>
+                  </summary>
+                  <div class="mt-4 prose prose-sm text-gray-500 leading-relaxed max-w-none">
+                    {{ product.metafields.custom.composition_care | metafield_tag }}
                   </div>
-                  <div class="shipping-grid-item">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12.378 1.602a.75.75 0 0 0-.756 0L3 6.632l9 5.25 9-5.25-8.622-5.03zM21.75 7.93l-9 5.25v9l8.628-5.032a.75.75 0 0 0 .372-.648V7.93zM11.25 22.18v-9l-9-5.25v8.57a.75.75 0 0 0 .372.648l8.628 5.033z"/>
-                    </svg>
-                    <div>
-                      <p class="text-[10px] text-gray-400 uppercase font-bold tracking-widest leading-none mb-1">
-                        Package
-                      </p>
-                      <p class="text-xs font-bold text-gray-900 leading-none">Regular Package</p>
-                    </div>
-                  </div>
-                  <div class="shipping-grid-item">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12.75 12.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0z"/><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM6.262 6.072a8.25 8.25 0 1 0 11.476 11.476L6.262 6.072z" clip-rule="evenodd"/>
-                    </svg>
-                    <div>
-                      <p class="text-[10px] text-gray-400 uppercase font-bold tracking-widest leading-none mb-1">
-                        Delivery Time
-                      </p>
-                      <p class="text-xs font-bold text-gray-900 leading-none">3-4 Working Days</p>
-                    </div>
-                  </div>
-                  <div class="shipping-grid-item">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375z"/><path fill-rule="evenodd" d="m3.087 9 1.414 9c.108.69.7 1.2 1.4 1.2h12.198c.7 0 1.292-.51 1.4-1.2L20.913 9H3.087zM8.25 10.5a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0v-3.75a.75.75 0 0 1 .75-.75zM12 10.5a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0v-3.75a.75.75 0 0 1 .75-.75zm3.75.75a.75.75 0 0 0-1.5 0v3.75a.75.75 0 0 0 1.5 0v-3.75z" clip-rule="evenodd"/>
-                    </svg>
-                    <div>
-                      <p class="text-[10px] text-gray-400 uppercase font-bold tracking-widest leading-none mb-1">
-                        Estimation Arrive
-                      </p>
-                      <p class="text-xs font-bold text-gray-900 leading-none">10-12 Oct 2024</p>
-                    </div>
-                  </div>
-                </div>
-              </details>
+                </details>
+              {% endif %}
             </div>
 
           {% when 'faq' %}
