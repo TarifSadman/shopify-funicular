@@ -1,7 +1,57 @@
 <div class="side-cart" id="SideCart">
   <div class="side-cart__overlay" onclick="closeSideCart()"></div>
 
-  <div class="side-cart__panel">
-    <div id="SideCartContent"></div>
+  <div class="side-cart__panel relative overflow-hidden">
+    <!-- Persistent Loading Overlay -->
+    <div
+      id="CartLoader"
+      class="absolute inset-0 bg-white/60 backdrop-blur-[2px] z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300"
+    >
+      <div class="loader"></div>
+    </div>
+
+    <div id="SideCartContent" class="h-full"></div>
+
+    <!-- Modern Error Toast -->
+    <div
+      id="CartError"
+      class="hidden absolute bottom-8 left-6 right-6 z-[60] bg-white border border-red-50 p-4 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] transition-all duration-300 transform translate-y-2 opacity-0"
+    >
+      <div class="flex items-center gap-4">
+        <div class="w-10 h-10 bg-red-50 rounded-full flex items-center justify-center flex-shrink-0">
+          <svg
+            class="w-6 h-6 text-red-500"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        </div>
+        <div class="flex-1">
+          <p id="CartErrorMessage" class="text-[12px] font-bold text-slate-900 leading-snug"></p>
+        </div>
+        <button
+          onclick="document.getElementById('CartError').classList.add('hidden')"
+          class="p-1 text-slate-300 hover:text-slate-900 transition-colors cursor-pointer"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
   </div>
 </div>

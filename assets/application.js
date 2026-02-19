@@ -11,6 +11,12 @@ window.closeSideCart = function () {
 };
 
 window.updateSideCart = function () {
+  const loader = document.getElementById("CartLoader");
+  const errorContainer = document.getElementById("CartError");
+  
+  // Clear any existing errors when updating
+  if (errorContainer) errorContainer.classList.add("hidden");
+
   fetch("/?section_id=cart-drawer")
     .then((response) => response.text())
     .then((text) => {
@@ -27,6 +33,10 @@ window.updateSideCart = function () {
     })
     .catch((error) => {
       console.error("Error updating side cart:", error);
+    })
+    .finally(() => {
+      // Hide loader if it was shown
+      if (loader) loader.classList.remove("opacity-100");
     });
 
   fetch("/cart.js")
@@ -45,8 +55,33 @@ window.updateSideCart = function () {
     });
 };
 
+window.showCartError = function(message) {
+  const errorContainer = document.getElementById("CartError");
+  const errorMessageEl = document.getElementById("CartErrorMessage");
+  const loader = document.getElementById("CartLoader");
+
+  if (loader) loader.classList.remove("opacity-100");
+  
+  if (errorContainer && errorMessageEl) {
+    errorMessageEl.innerText = message || "An unexpected error occurred. Please try again.";
+    errorContainer.classList.remove("hidden");
+    
+    // Add shake effect
+    errorContainer.classList.add("cart-error-shake");
+    setTimeout(() => errorContainer.classList.remove("cart-error-shake"), 500);
+    
+    // Auto-scroll to error
+    errorContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  } else {
+    alert(message);
+  }
+};
+
 window.updateCartQty = function (lineIndex, quantity) {
   if (quantity < 1) return;
+
+  const loader = document.getElementById("CartLoader");
+  if (loader) loader.classList.add("opacity-100");
 
   fetch("/cart/change.js", {
     method: "POST",
@@ -58,16 +93,26 @@ window.updateCartQty = function (lineIndex, quantity) {
       quantity: quantity,
     }),
   })
-    .then((response) => response.json())
+    .then(async (response) => {
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.description || data.message || "Failed to update quantity");
+      }
+      return data;
+    })
     .then(() => {
       updateSideCart();
     })
     .catch((error) => {
       console.error("Error updating quantity:", error);
+      showCartError(error.message);
     });
 };
 
 window.removeCartItem = function (lineIndex) {
+  const loader = document.getElementById("CartLoader");
+  if (loader) loader.classList.add("opacity-100");
+
   fetch("/cart/change.js", {
     method: "POST",
     headers: {
@@ -78,13 +123,19 @@ window.removeCartItem = function (lineIndex) {
       quantity: 0,
     }),
   })
-    .then((response) => response.json())
+    .then(async (response) => {
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.description || data.message || "Failed to remove item");
+      }
+      return data;
+    })
     .then(() => {
       updateSideCart();
     })
     .catch((error) => {
       console.error("Error removing item from cart:", error);
-      alert("There was an error removing the item.");
+      showCartError(error.message);
     });
 };
 

@@ -48,9 +48,9 @@ input[type="number"] {
 
 .side-cart__panel {
     position: absolute;
-    top: 1rem;
+    top: 2rem;
     right: 1rem;
-    bottom: 1rem;
+    bottom: 2rem;
     width: calc(100% - 2rem);
     max-width: 440px;
     height: auto;
@@ -478,4 +478,61 @@ main[role="main"] {
 
 .progressive-underline:hover::after {
     transform: scaleX(1);
+}
+
+/* Cart Loader & Error Styles */
+#CartLoader {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out, backdrop-filter 0.3s ease-in-out;
+}
+
+#CartLoader.opacity-100 {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+.loader {
+    width: 50px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background:
+        radial-gradient(farthest-side, #111827 95%, #0000) 50% 1px/12px 12px no-repeat,
+        radial-gradient(farthest-side, #0000 calc(100% - 14px), #e5e7eb 0);
+    animation: l9 2s infinite linear;
+}
+
+@keyframes l9 {
+    to {
+        transform: rotate(1turn)
+    }
+}
+
+#shopify-section-cart-drawer {
+    display: contents;
+}
+
+#CartError:not(.hidden) {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.cart-error-shake {
+    animation: cart-shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+@keyframes cart-shake {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    25% {
+        transform: translateY(-4px);
+    }
+
+    75% {
+        transform: translateY(2px);
+    }
 }
