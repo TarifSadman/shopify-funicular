@@ -5,7 +5,7 @@
     </h1>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for article in blog.articles %}
           <div class="flex justify-center">
             <!-- CARD -->
@@ -77,9 +77,9 @@
       "id": "number_of_blog_posts",
       "step": 1,
       "min": 1,
-      "max": 6,
+      "max": 12,
       "label": "Blog posts per page",
-      "default": 1
+      "default": 6
     }
   ]
 }
