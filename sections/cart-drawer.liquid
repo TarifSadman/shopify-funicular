@@ -1,115 +1,202 @@
-<div class="p-4 h-full flex flex-col">
-  <div class="flex justify-between items-center mb-6">
-    <h2 class="text-xl font-bold">Your Cart</h2>
+<div class="p-6 h-full flex flex-col bg-white">
+  <div class="flex justify-between items-center mb-8 pb-4 border-b border-slate-100">
+    <div>
+      <h2 class="text-2xl font-bold text-slate-900">Your Cart</h2>
+      <p class="text-sm text-slate-500 mt-1">
+        {{ cart.item_count }}
+        {{ cart.item_count | pluralize: 'item', 'items' }}
+      </p>
+    </div>
+    <button
+      type="button"
+      onclick="closeSideCart()"
+      class="p-2 -mr-2 text-slate-400 hover:text-slate-900 transition-colors cursor-pointer"
+      aria-label="Close cart"
+    >
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
   </div>
 
   {% if cart.item_count > 0 %}
-    <div class="flex-1 overflow-y-auto space-y-4 pr-2">
+    <div class="flex-1 overflow-y-auto -mx-2 px-2 space-y-6">
       {% for item in cart.items %}
-        <div class="flex gap-4 pb-4">
-          <a href="{{ item.url }}" class="block shrink-0">
+        <div class="flex gap-4 group">
+          <div class="relative w-24 h-32 flex-shrink-0 bg-slate-50 overflow-hidden rounded-xl border border-slate-100">
             {% if item.image %}
               <img
-                src="{{ item.image | image_url: width: 200 }}"
+                src="{{ item.image | image_url: width: 240 }}"
                 alt="{{ item.title | escape }}"
-                class="w-20 h-20 object-cover border border-gray-200"
-                width="200"
-                height="200"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                width="240"
+                height="320"
+                loading="lazy"
               >
             {% else %}
-              {{ 'product-1' | placeholder_svg_tag: 'w-20 h-20 object-cover border border-gray-200' }}
+              {{ 'product-1' | placeholder_svg_tag: 'w-full h-full object-cover' }}
             {% endif %}
-          </a>
+          </div>
 
-          <div class="flex-1 min-w-0">
+          <div class="flex-1 flex flex-col py-1">
             <div class="flex justify-between items-start gap-2">
-              <div class="flex-1 min-w-0">
-                <a href="{{ item.url }}" class="block text-base font-medium text-gray-900 truncate hover:underline">
+              <div class="flex-1">
+                <a
+                  href="{{ item.url }}"
+                  class="text-sm font-semibold text-slate-900 hover:text-blue-600 transition-colors line-clamp-2"
+                >
                   {{ item.product.title }}
                 </a>
                 {% unless item.product.has_only_default_variant %}
-                  <p class="text-sm text-gray-500 mt-1">{{ item.variant.title }}</p>
+                  <p class="text-xs text-slate-500 mt-1 uppercase tracking-wider font-medium">
+                    {{ item.variant.title }}
+                  </p>
                 {% endunless %}
               </div>
               <button
                 type="button"
                 onclick="removeCartItem({{ forloop.index }})"
-                class="inline-flex items-center justify-center w-6 h-6 hover:bg-red-100 transition shrink-0 bg-transparent border-0 cursor-pointer"
+                class="text-slate-400 hover:text-red-500 transition-colors p-1"
                 title="Remove item"
               >
-                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M10.9688 3.21871C11.1933 2.99416 11.5567 2.99416 11.7813 3.21871C12.0056 3.44328 12.0057 3.80673 11.7813 4.03121L8.31251 7.49996L11.7813 10.9687L11.8555 11.0586C12.0026 11.2817 11.9777 11.5848 11.7813 11.7812C11.5849 11.9776 11.2818 12.0026 11.0586 11.8554L10.9688 11.7812L7.50001 8.31246L4.03126 11.7812C3.80677 12.0057 3.44332 12.0056 3.21876 11.7812C2.99421 11.5567 2.99421 11.1933 3.21876 10.9687L6.68751 7.49996L3.21876 4.03121L3.14454 3.94137C2.99723 3.71819 3.0223 3.41517 3.21876 3.21871C3.41522 3.02225 3.71823 2.99719 3.94141 3.14449L4.03126 3.21871L7.50001 6.68746L10.9688 3.21871Z" fill="currentColor"/>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
                 </svg>
               </button>
             </div>
 
-            <div class="flex justify-between items-end mt-2">
-              <div class="el-qty-counter">
+            <div class="flex justify-between items-center mt-auto pt-2">
+              <div class="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-white">
                 <button
                   type="button"
-                  class="el-qty-btn"
+                  class="w-8 h-8 flex items-center justify-center text-slate-500 hover:bg-slate-50 disabled:opacity-30"
                   onclick="updateCartQty({{ forloop.index }}, {{ item.quantity | minus: 1 }})"
                   {% if item.quantity == 1 %}
                     disabled
                   {% endif %}
                 >
-                  −
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  >
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
                 </button>
-
-                <span class="el-qty-value">{{ item.quantity }}</span>
-
+                <span class="w-8 text-center text-xs font-bold text-slate-900">{{ item.quantity }}</span>
                 <button
                   type="button"
-                  class="el-qty-btn"
+                  class="w-8 h-8 flex items-center justify-center text-slate-500 hover:bg-slate-50"
                   onclick="updateCartQty({{ forloop.index }}, {{ item.quantity | plus: 1 }})"
                 >
-                  +
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  >
+                    <line x1="5" y1="12" x2="19" y2="12"></line><line x1="12" y1="5" x2="12" y2="19"></line>
+                  </svg>
                 </button>
               </div>
-
-              <p class="font-medium text-gray-900">{{ item.final_line_price | money }}</p>
+              <p class="text-sm font-bold text-slate-900">{{ item.final_line_price | money }}</p>
             </div>
           </div>
         </div>
       {% endfor %}
     </div>
 
-    <div class="border-t border-gray-200 pt-4 mt-4 bg-white">
-      <div class="flex justify-between text-lg font-bold mb-4 text-gray-900">
-        <span>Total</span>
-        <span>{{ cart.total_price | money }}</span>
+    <div class="mt-8 pt-6 border-t border-slate-100">
+      <div class="flex justify-between items-center mb-6">
+        <span class="text-slate-500 font-medium">Subtotal</span>
+        <span class="text-xl font-black text-slate-900">{{ cart.total_price | money }}</span>
       </div>
 
-      <div class="space-y-3">
-        <a
-          href="{{ routes.cart_url }}"
-          class="block w-full bg-gray-100 text-gray-900 hover:bg-gray-200 transition text-center py-3 font-semibold"
-        >
-          View Cart
-        </a>
+      <div class="flex flex-col gap-3">
         <form action="{{ routes.cart_url }}" method="post">
           <button
             type="submit"
             name="checkout"
-            class="cursor-pointer block w-full bg-black text-white hover:bg-gray-900 transition py-3 font-semibold lg:text-lg"
+            class="w-full bg-slate-900 text-white rounded-xl py-4 font-bold text-sm uppercase tracking-widest hover:bg-slate-800 transition-all active:scale-[0.98] shadow-lg shadow-slate-200"
           >
-            Checkout
+            Go to Checkout
           </button>
         </form>
+        <div class="flex justify-center">
+          <a
+            href="{{ routes.cart_url }}"
+            class="progressive-underline py-2 text-xs font-bold text-slate-400 hover:text-slate-900 uppercase tracking-widest transition-all"
+          >
+            View Full Cart
+          </a>
+        </div>
       </div>
+      <p class="text-[10px] text-slate-400 text-center mt-4 uppercase tracking-tighter">
+        Shipping & taxes calculated at checkout
+      </p>
     </div>
   {% else %}
-    <div class="flex-1 flex flex-col justify-center items-center text-center">
-      <div class="w-16 h-16 bg-gray-100 flex items-center justify-center mb-4">
-        {% render 'icon_shopping_bag', class: 'w-8 h-8 text-gray-400' %}
+    <div class="flex-1 flex flex-col justify-center items-center text-center p-8">
+      <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mb-6 text-slate-200">
+        <svg
+          width="48"
+          height="48"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path d="M3 6h18"></path><path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
       </div>
-      <h3 class="text-lg font-medium text-gray-900 mb-2">Your cart is empty</h3>
+      <h3 class="text-xl font-bold text-slate-900 mb-2">Your cart is empty</h3>
+      <p class="text-sm text-slate-500 mb-8 max-w-[200px]">Looks like you haven't added anything to your cart yet.</p>
       <a
         href="{{ routes.all_products_collection_url }}"
-        class="text-indigo-600 font-medium hover:text-indigo-500 hover:underline"
+        class="inline-flex items-center gap-2 bg-slate-900 text-white px-8 py-3 rounded-full font-bold text-sm uppercase tracking-widest hover:bg-slate-800 transition-all active:scale-95"
         onclick="closeSideCart()"
       >
-        Start Shopping >
+        Start Shopping
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
       </a>
     </div>
   {% endif %}
