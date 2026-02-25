@@ -28,7 +28,7 @@
           "type": "variant_selector",
           "settings": {}
         },
-        "size_reco_star_rating_XVz7GH": {
+        "size_reco_star_rating_Vjn8ik": {
           "type": "shopify://apps/size-reco/blocks/star_rating/019c9602-9a6d-70b3-972c-eee666975d27",
           "settings": {}
         },
@@ -54,7 +54,7 @@
         "tags",
         "price",
         "variant_selector",
-        "size_reco_star_rating_XVz7GH",
+        "size_reco_star_rating_Vjn8ik",
         "quantity_selector",
         "buy_buttons",
         "description",
