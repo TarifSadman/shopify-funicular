@@ -12,6 +12,10 @@
     "main": {
       "type": "main-product",
       "blocks": {
+        "size_reco_star_rating_m8hkbD": {
+          "type": "shopify://apps/size-reco/blocks/star_rating/019c9602-9a6d-70b3-972c-eee666975d27",
+          "settings": {}
+        },
         "title": {
           "type": "title",
           "settings": {}
@@ -46,6 +50,7 @@
         }
       },
       "block_order": [
+        "size_reco_star_rating_m8hkbD",
         "title",
         "tags",
         "price",
