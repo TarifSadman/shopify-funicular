@@ -28,9 +28,12 @@
           "type": "variant_selector",
           "settings": {}
         },
-        "size_recommender_size_widget_6EyJdf": {
-          "type": "shopify://apps/size-recommender/blocks/size-widget/019c95f4-38f0-7b57-82de-247ed5724086",
-          "settings": {}
+        "size_reco_star_rating_8rKjK6": {
+          "type": "shopify://apps/size-reco/blocks/star_rating/019c9602-9a6d-70b3-972c-eee666975d27",
+          "settings": {
+            "product": "{{product}}",
+            "colour": "#ff0000"
+          }
         },
         "quantity_selector": {
           "type": "quantity_selection",
@@ -54,7 +57,7 @@
         "tags",
         "price",
         "variant_selector",
-        "size_recommender_size_widget_6EyJdf",
+        "size_reco_star_rating_8rKjK6",
         "quantity_selector",
         "buy_buttons",
         "description",
