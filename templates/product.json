@@ -16,10 +16,6 @@
           "type": "title",
           "settings": {}
         },
-        "size_recommender_size_widget_6EyJdf": {
-          "type": "shopify://apps/size-recommender/blocks/size-widget/019c95f4-38f0-7b57-82de-247ed5724086",
-          "settings": {}
-        },
         "tags": {
           "type": "tags",
           "settings": {}
@@ -30,6 +26,10 @@
         },
         "variant_selector": {
           "type": "variant_selector",
+          "settings": {}
+        },
+        "size_recommender_size_widget_6EyJdf": {
+          "type": "shopify://apps/size-recommender/blocks/size-widget/019c95f4-38f0-7b57-82de-247ed5724086",
           "settings": {}
         },
         "quantity_selector": {
@@ -51,10 +51,10 @@
       },
       "block_order": [
         "title",
-        "size_recommender_size_widget_6EyJdf",
         "tags",
         "price",
         "variant_selector",
+        "size_recommender_size_widget_6EyJdf",
         "quantity_selector",
         "buy_buttons",
         "description",
