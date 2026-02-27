@@ -1,24 +1,502 @@
-<div class="px-4 py-8">
-  {% unless collection.handle == 'all' %}
-    <a href="{{ routes.collections_url }}" class="text-base text-center block my-4 text-gray-500 hover:underline"
-      >Go Back to Collections</a
-    >
-  {% endunless %}
-  {% paginate collection.products by section.settings.number_of_products_per_page %}
-    <h1 class="text-3xl text-center">{{ collection.title }}</h1>
+<div
+  class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12"
+  x-data="
+    {
+      mobileFiltersOpen: false,
+      loading: false,
+      openSections: ['Availability', 'Price', 'Product type', 'Color'],
+      toggleSection(section) {
+        if (this.openSections.includes(section)) {
+          this.openSections = this.openSections.filter(s => s !== section);
+        } else {
+          this.openSections.push(section);
+        }
+      },
+      updateFilters(url = null) {
+        this.loading = true;
+        if (!url) {
+          const form = document.querySelector('#CollectionFiltersForm');
+          const mobileForm = document.querySelector('#MobileCollectionFiltersForm');
+          const activeForm = (window.innerWidth >= 1024) ? form : (mobileForm || form);
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {% for product in collection.products %}
-          {% render 'product-card', product: product %}
-        {% else %}
-          <p>There are no products in this collection.</p>
-        {% endfor %}
+          const formData = new FormData(activeForm);
+          const searchParams = new URLSearchParams(formData).toString();
+          url = `${window.location.pathname}?${searchParams}`;
+        }
+        const fetchUrl = url.includes('?') ? `${url}&section_id={{ section.id }}` : `${url}?section_id={{ section.id }}`;
+        fetch(fetchUrl)
+          .then(response => response.text())
+          .then(text => {
+            const html = new DOMParser().parseFromString(text, 'text/html');
+          document.querySelector('#CollectionProductGrid').innerHTML = html.querySelector('#CollectionProductGrid').innerHTML;
+          document.querySelector('#CollectionFiltersForm').innerHTML = html.querySelector('#CollectionFiltersForm').innerHTML;
+          if (document.querySelector('#MobileCollectionFiltersForm') && html.querySelector('#MobileCollectionFiltersForm')) {
+            document.querySelector('#MobileCollectionFiltersForm').innerHTML = html.querySelector('#MobileCollectionFiltersForm').innerHTML;
+          }
+          document.querySelector('#ActiveFilters').innerHTML = html.querySelector('#ActiveFilters').innerHTML;
+          document.querySelector('#PaginationContainer').innerHTML = html.querySelector('#PaginationContainer').innerHTML;
+
+          if (html.querySelector('#CollectionResultsCount')) {
+              document.querySelector('#CollectionResultsCount').innerHTML = html.querySelector('#CollectionResultsCount').innerHTML;
+            }
+            window.history.pushState({ path: url }, '', url);
+          })
+          .catch(e => {})
+          .finally(() => {
+            this.loading = false;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+      },
+      init() {
+        document.addEventListener('click', (e) => {
+          const link = e.target.closest('#PaginationContainer a, #ActiveFilters a');
+          if (link) {
+            e.preventDefault();
+            this.updateFilters(link.getAttribute('href'));
+          }
+        });
+      }
+    }
+  "
+>
+  {% unless collection.handle == 'all' %}
+    <a
+      href="{{ routes.collections_url }}"
+      class="flex items-center gap-2 text-sm text-gray-500 hover:text-black transition mb-8 group"
+    >
+      <span class="transition-transform group-hover:-translate-x-1">{% render 'icon_arrow_left' %}</span>
+      Back to Collections
+    </a>
+  {% endunless %}
+
+  <div class="flex items-baseline justify-between border-b border-gray-200 pb-6">
+    <h1 class="text-4xl font-bold tracking-tight text-gray-900">{{ collection.title }}</h1>
+
+    <div class="flex items-center">
+      <div class="relative inline-block text-left">
+        <select
+          name="sort_by"
+          form="CollectionFiltersForm"
+          @change="updateFilters()"
+          class="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-black sm:text-sm sm:leading-6"
+        >
+          {%- for option in collection.sort_options -%}
+            <option
+              value="{{ option.value }}"
+              {% if option.value == collection.sort_by %}
+                selected
+              {% endif %}
+            >
+              {{ option.name }}
+            </option>
+          {%- endfor -%}
+        </select>
+      </div>
+
+      <button
+        @click="mobileFiltersOpen = true"
+        type="button"
+        class="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 lg:hidden"
+      >
+        <span class="sr-only">Filters</span>
+        {% render 'icon_filter' %}
+      </button>
+    </div>
+  </div>
+
+  <section aria-labelledby="products-heading" class="pb-24 pt-6">
+    <h2 id="products-heading" class="sr-only">Products</h2>
+
+    <div class="collection-layout">
+      <form
+        id="CollectionFiltersForm"
+        class="hidden lg:block collection-sidebar"
+      >
+        <div class="f-sidebar-header">
+          <span class="f-results-count" id="CollectionResultsCount">{{ collection.products_count }} results</span>
+          <a
+            href="{{ collection.url }}?sort_by={{ collection.sort_by }}"
+            class="f-clear-all"
+            @click.prevent="updateFilters($el.href)"
+            >Clear all</a
+          >
+        </div>
+
+        {%- if collection.filters.size > 0 -%}
+          {%- for filter in collection.filters -%}
+            <div class="f-filter-group">
+              <button
+                type="button"
+                class="f-filter-trigger"
+                :class="openSections.includes('{{ filter.label }}') && 'is-active'"
+                @click="toggleSection('{{ filter.label }}')"
+              >
+                <span>{{ filter.label }}</span>
+                {% render 'icon_chevron_down' %}
+              </button>
+
+              <div
+                class="f-filter-content"
+                x-show="openSections.includes('{{ filter.label }}')"
+                x-collapse
+              >
+                <div class="space-y-1">
+                  {%- case filter.type -%}
+                    {%- when 'list', 'boolean' -%}
+                      {%- for value in filter.values -%}
+                        <label class="f-checkbox-container {% if value.count == 0 and value.active == false %}is-disabled{% endif %}">
+                          <div class="f-checkbox-label-wrap">
+                            <input
+                              name="{{ value.param_name }}"
+                              value="{{ value.value }}"
+                              type="checkbox"
+                              {% if value.active %}
+                                checked
+                              {% endif %}
+                              {% if value.count == 0 and value.active == false %}
+                                disabled
+                              {% endif %}
+                              @change="updateFilters()"
+                              class="f-checkbox"
+                            >
+                            <span class="f-label-text">{{ value.label }}</span>
+                          </div>
+                          <span class="f-value-count">{{ value.count }}</span>
+                        </label>
+                      {%- endfor -%}
+                    {%- when 'price_range' -%}
+                      {% liquid
+                        assign max_price_amount = filter.range_max | money_without_currency | replace: ',', '' | plus: 0 | ceil
+                        if filter.min_value.value
+                          assign min_value = filter.min_value.value | money_without_currency | replace: ',', '' | plus: 0 | floor
+                        else
+                          assign min_value = 0
+                        endif
+                        if filter.max_value.value
+                          assign max_value = filter.max_value.value | money_without_currency | replace: ',', '' | plus: 0 | ceil
+                        else
+                          assign max_value = max_price_amount
+                        endif
+                      %}
+                      <div
+                        class="f-price-range"
+                        x-data="
+                          {
+                            min: {{ min_value }},
+                            max: {{ max_value }},
+                            totalMax: {{ max_price_amount }}
+                          }
+                        "
+                      >
+                        <div class="f-price-slider-ui">
+                          <div
+                            class="f-price-slider-track"
+                            :style="`left: ${(min / totalMax) * 100}%; right: ${100 - (max / totalMax) * 100}%`"
+                          ></div>
+
+                          <input
+                            type="range"
+                            x-model.number="min"
+                            min="0"
+                            :max="totalMax"
+                            step="1"
+                            @input="if(min > max - 1) min = max - 1"
+                            @change="updateFilters()"
+                          >
+                          <input
+                            type="range"
+                            x-model.number="max"
+                            min="0"
+                            :max="totalMax"
+                            step="1"
+                            @input="if(max < min + 1) max = min + 1"
+                            @change="updateFilters()"
+                          >
+
+                          <div
+                            class="f-price-slider-thumb"
+                            :style="`left: ${(min / totalMax) * 100}%`"
+                          ></div>
+                          <div
+                            class="f-price-slider-thumb"
+                            :style="`left: ${(max / totalMax) * 100}%`"
+                          ></div>
+                        </div>
+
+                        <div class="f-price-inputs">
+                          <div class="f-price-input-wrap">
+                            <span>$</span>
+                            <input
+                              name="{{ filter.min_value.param_name }}"
+                              type="number"
+                              x-model="min"
+                              placeholder="0"
+                              @change="updateFilters()"
+                            >
+                          </div>
+                          <span class="f-price-to">to</span>
+                          <div class="f-price-input-wrap">
+                            <span>$</span>
+                            <input
+                              name="{{ filter.max_value.param_name }}"
+                              type="number"
+                              x-model="max"
+                              placeholder="{{ max_price_amount }}"
+                              @change="updateFilters()"
+                            >
+                          </div>
+                        </div>
+                      </div>
+                  {%- endcase -%}
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        {%- else -%}
+          <div class="filters-empty-state">No filterable attributes found for this collection.</div>
+        {%- endif -%}
+      </form>
+
+      <div class="collection-main">
+        <div id="ActiveFilters" class="flex flex-wrap gap-2 mb-6">
+          {%- for filter in collection.filters -%}
+            {%- for value in filter.active_values -%}
+              <a
+                href="{{ value.url_to_remove }}"
+                @click.prevent="window.location.href = $el.href; updateFilters()"
+                class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800 hover:bg-gray-200"
+              >
+                {{ filter.label }}: {{ value.label }}
+                <span class="ml-1 text-gray-400 hover:text-gray-500">×</span>
+              </a>
+            {%- endfor -%}
+            {%- if filter.type == 'price_range' -%}
+              {%- if filter.min_value.value or filter.max_value.value -%}
+                <a
+                  href="{{ filter.url_to_remove }}"
+                  class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800"
+                >
+                  {%- if filter.min_value.value -%}{{ filter.min_value.value | money }}{%- else -%}$0{%- endif -%}
+                  -
+                  {%- if filter.max_value.value -%}
+                    {{ filter.max_value.value | money }}
+                  {%- else -%}
+                    {{ filter.range_max | money }}
+                  {%- endif -%}
+                  <span class="ml-1 text-gray-400">×</span>
+                </a>
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        <div id="CollectionProductGrid" class="relative">
+          <div
+            x-show="loading"
+            class="absolute inset-0 bg-white/50 backdrop-blur-sm z-10 flex items-center justify-center"
+          >
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
+          </div>
+
+          {% paginate collection.products by section.settings.number_of_products_per_page %}
+            <div class="f-grid f-grid-cols-2 f-xl-grid-cols-3">
+              {% for product in collection.products %}
+                {% render 'product-card', product: product %}
+              {% else %}
+                <div class="col-span-full py-24 text-center">
+                  <p class="text-gray-500">No products found for this selection.</p>
+                  <a href="{{ collection.url }}" class="mt-4 inline-block text-black font-semibold underline"
+                    >Clear all filters</a
+                  >
+                </div>
+              {% endfor %}
+            </div>
+
+            <div id="PaginationContainer" class="mt-12">
+              {% render 'pagination', pagination: paginate %}
+            </div>
+          {% endpaginate %}
+        </div>
       </div>
     </div>
+  </section>
 
-    {% render 'pagination', pagination: paginate %}
-  {% endpaginate %}
+  <!-- Mobile Filter Drawer -->
+  <div
+    x-show="mobileFiltersOpen"
+    class="relative z-50 lg:hidden"
+    x-ref="dialog"
+    aria-modal="true"
+    @keydown.window.escape="mobileFiltersOpen = false"
+  >
+    <div
+      x-show="mobileFiltersOpen"
+      x-transition:enter="transition-opacity ease-linear duration-300"
+      x-transition:enter-start="opacity-0"
+      x-transition:enter-end="opacity-100"
+      x-transition:leave="transition-opacity ease-linear duration-300"
+      x-transition:leave-start="opacity-100"
+      x-transition:leave-end="opacity-0"
+      class="fixed inset-0 bg-black bg-opacity-25"
+    ></div>
+
+    <div class="fixed inset-0 z-40 flex">
+      <div
+        x-show="mobileFiltersOpen"
+        x-transition:enter="transition ease-in-out duration-300 transform"
+        x-transition:enter-start="translate-x-full"
+        x-transition:enter-end="translate-x-0"
+        x-transition:leave="transition ease-in-out duration-300 transform"
+        x-transition:leave-start="translate-x-0"
+        x-transition:leave-end="translate-x-full"
+        class="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white shadow-xl"
+      >
+        <div class="flex items-center justify-between px-4 py-4 border-b">
+          <h2 class="text-lg font-bold text-gray-900 uppercase tracking-widest">Filters</h2>
+          <button
+            @click="mobileFiltersOpen = false"
+            type="button"
+            class="-mr-2 flex h-10 w-10 items-center justify-center rounded-md bg-white p-2 text-gray-400"
+          >
+            <span class="sr-only">Close menu</span>
+            {% render 'icon_close' %}
+          </button>
+        </div>
+
+        <!-- Mobile Filter Content -->
+        <form id="MobileCollectionFiltersForm" class="mt-4 px-4 pb-20">
+          <div class="f-sidebar-header">
+            <span class="f-results-count"> {{ collection.products_count }} results </span>
+            <a
+              href="{{ collection.url }}?sort_by={{ collection.sort_by }}"
+              class="f-clear-all"
+              @click.prevent="updateFilters($el.href)"
+              >Clear all</a
+            >
+          </div>
+
+          {%- if collection.filters.size > 0 -%}
+            {%- for filter in collection.filters -%}
+              <div class="f-filter-group">
+                <button
+                  type="button"
+                  class="f-filter-trigger"
+                  :class="openSections.includes('{{ filter.label }}') && 'is-active'"
+                  @click="toggleSection('{{ filter.label }}')"
+                >
+                  <span>{{ filter.label }}</span>
+                  {% render 'icon_chevron_down' %}
+                </button>
+
+                <div
+                  class="f-filter-content"
+                  x-show="openSections.includes('{{ filter.label }}')"
+                  x-collapse
+                >
+                  <div class="space-y-1">
+                    {%- case filter.type -%}
+                      {%- when 'list', 'boolean' -%}
+                        {%- for value in filter.values -%}
+                          <label class="f-checkbox-container {% if value.count == 0 and value.active == false %}is-disabled{% endif %}">
+                            <div class="f-checkbox-label-wrap">
+                              <input
+                                name="{{ value.param_name }}"
+                                value="{{ value.value }}"
+                                type="checkbox"
+                                {% if value.active %}
+                                  checked
+                                {% endif %}
+                                {% if value.count == 0 and value.active == false %}
+                                  disabled
+                                {% endif %}
+                                @change="updateFilters()"
+                                class="f-checkbox"
+                              >
+                              <span class="f-label-text">{{ value.label }}</span>
+                            </div>
+                            <span class="f-value-count">{{ value.count }}</span>
+                          </label>
+                        {%- endfor -%}
+                      {%- when 'price_range' -%}
+                        {% liquid
+                          assign max_price_amount = filter.range_max | money_without_currency | replace: ',', '' | plus: 0 | ceil
+                          if filter.min_value.value
+                            assign min_value = filter.min_value.value | money_without_currency | replace: ',', '' | plus: 0 | floor
+                          else
+                            assign min_value = 0
+                          endif
+                          if filter.max_value.value
+                            assign max_value = filter.max_value.value | money_without_currency | replace: ',', '' | plus: 0 | ceil
+                          else
+                            assign max_value = max_price_amount
+                          endif
+                        %}
+                        <div
+                          class="f-price-range"
+                          x-data="{ min: {{ min_value }}, max: {{ max_value }}, totalMax: {{ max_price_amount }} }"
+                        >
+                          <div class="f-price-slider-ui">
+                            <div
+                              class="f-price-slider-track"
+                              :style="`left: ${(min / totalMax) * 100}%; right: ${100 - (max / totalMax) * 100}%`"
+                            ></div>
+
+                            <input
+                              type="range"
+                              x-model.number="min"
+                              min="0"
+                              :max="totalMax"
+                              step="1"
+                              @input="if(min > max - 1) min = max - 1"
+                              @change="updateFilters()"
+                            >
+                            <input
+                              type="range"
+                              x-model.number="max"
+                              min="0"
+                              :max="totalMax"
+                              step="1"
+                              @input="if(max < min + 1) max = min + 1"
+                              @change="updateFilters()"
+                            >
+
+                            <div class="f-price-slider-thumb" :style="`left: ${(min / totalMax) * 100}%`"></div>
+                            <div class="f-price-slider-thumb" :style="`left: ${(max / totalMax) * 100}%`"></div>
+                          </div>
+                          <div class="f-price-inputs">
+                            <div class="f-price-input-wrap">
+                              <span>$</span>
+                              <input
+                                name="{{ filter.min_value.param_name }}"
+                                type="number"
+                                x-model="min"
+                                placeholder="0"
+                                @change="updateFilters()"
+                              >
+                            </div>
+                            <span class="f-price-to">to</span>
+                            <div class="f-price-input-wrap">
+                              <span>$</span>
+                              <input
+                                name="{{ filter.max_value.param_name }}"
+                                type="number"
+                                x-model="max"
+                                placeholder="{{ max_price_amount }}"
+                                @change="updateFilters()"
+                              >
+                            </div>
+                          </div>
+                        </div>
+                    {%- endcase -%}
+                  </div>
+                </div>
+              </div>
+            {%- endfor -%}
+          {%- endif -%}
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 
 {% schema %}
@@ -28,7 +506,7 @@
     {
       "type": "number",
       "id": "number_of_products_per_page",
-      "default": 6,
+      "default": 12,
       "label": "Number of products per page"
     }
   ]

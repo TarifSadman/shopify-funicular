@@ -31,9 +31,7 @@ window.updateSideCart = function () {
         document.getElementById("SideCartContent").innerHTML = text;
       }
     })
-    .catch((error) => {
-      console.error("Error updating side cart:", error);
-    })
+    .catch((error) => {})
     .finally(() => {
       // Hide loader if it was shown
       if (loader) loader.classList.remove("opacity-100");
@@ -50,9 +48,7 @@ window.updateSideCart = function () {
           : cartCount.classList.add("hidden");
       }
     })
-    .catch((error) => {
-      console.error("Error updating cart count:", error);
-    });
+    .catch((error) => {});
 };
 
 window.showCartError = function(message) {
@@ -104,7 +100,6 @@ window.updateCartQty = function (lineIndex, quantity) {
       updateSideCart();
     })
     .catch((error) => {
-      console.error("Error updating quantity:", error);
       showCartError(error.message);
     });
 };
@@ -134,7 +129,6 @@ window.removeCartItem = function (lineIndex) {
       updateSideCart();
     })
     .catch((error) => {
-      console.error("Error removing item from cart:", error);
       showCartError(error.message);
     });
 };
@@ -211,9 +205,7 @@ window.updateWishlistDrawer = async function () {
         const product = await response.json();
         products.push(product);
       }
-    } catch (e) {
-      console.error("Error fetching wishlisted product:", e);
-    }
+    } catch (e) {}
   }
 
   if (products.length === 0) {
@@ -488,7 +480,6 @@ document.addEventListener("DOMContentLoaded", () => {
           openSideCart();
         })
         .catch((error) => {
-          console.error("Error adding to cart:", error);
           alert("There was an error adding the item to your cart.");
         })
         .finally(() => {

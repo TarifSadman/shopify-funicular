@@ -10,13 +10,8 @@
   script.src = "https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js";
   script.defer = true;
 
-  script.onload = function () {
-    console.log("Swiper CDN loaded");
-  };
-
-  script.onerror = function () {
-    console.error("Failed to load Swiper CDN");
-  };
+  script.onload = function () {};
+  script.onerror = function () {};
 
   document.body.appendChild(script);
 
