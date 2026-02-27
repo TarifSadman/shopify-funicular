@@ -1,8 +1,8 @@
-<div class="p-6 h-full flex flex-col bg-white">
-  <div class="flex justify-between items-center mb-8 pb-4 border-b border-slate-100">
+<div class="drawer">
+  <div class="drawer__header">
     <div>
-      <h2 class="text-2xl font-bold text-slate-900">Your Cart</h2>
-      <p class="text-sm text-slate-500 mt-1">
+      <h2 class="drawer__title">Your Cart</h2>
+      <p class="drawer__count">
         {{ cart.item_count }}
         {{ cart.item_count | pluralize: 'item', 'items' }}
       </p>
@@ -10,7 +10,7 @@
     <button
       type="button"
       onclick="closeSideCart()"
-      class="p-2 -mr-2 text-slate-400 hover:text-slate-900 transition-colors cursor-pointer"
+      class="drawer__close"
       aria-label="Close cart"
     >
       <svg
@@ -30,35 +30,32 @@
   </div>
 
   {% if cart.item_count > 0 %}
-    <div class="flex-1 overflow-y-auto -mx-2 px-2 space-y-6">
+    <div class="drawer__items">
       {% for item in cart.items %}
-        <div class="flex gap-4 group">
-          <div class="relative w-24 h-32 flex-shrink-0 bg-slate-50 overflow-hidden rounded-xl border border-slate-100">
+        <div class="drawer__item">
+          <div class="drawer__item-img-wrap">
             {% if item.image %}
               <img
                 src="{{ item.image | image_url: width: 240 }}"
                 alt="{{ item.title | escape }}"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                class="drawer__item-img"
                 width="240"
                 height="320"
                 loading="lazy"
               >
             {% else %}
-              {{ 'product-1' | placeholder_svg_tag: 'w-full h-full object-cover' }}
+              {{ 'product-1' | placeholder_svg_tag: 'drawer__item-img' }}
             {% endif %}
           </div>
 
-          <div class="flex-1 flex justify-between flex-col py-1">
-            <div class="flex justify-between items-start gap-2">
-              <div class="flex-1">
-                <a
-                  href="{{ item.url }}"
-                  class="text-sm font-semibold text-slate-900 hover:text-blue-600 transition-colors line-clamp-2"
-                >
+          <div class="drawer__item-info">
+            <div class="drawer__item-header">
+              <div class="drawer__item-header-info">
+                <a href="{{ item.url }}" class="drawer__item-title">
                   {{ item.product.title }}
                 </a>
                 {% unless item.product.has_only_default_variant %}
-                  <p class="text-xs text-slate-500 mt-1 uppercase tracking-wider font-medium">
+                  <p class="drawer__item-variant">
                     {{ item.variant.title }}
                   </p>
                 {% endunless %}
@@ -66,7 +63,7 @@
               <button
                 type="button"
                 onclick="removeCartItem({{ forloop.index }})"
-                class="text-slate-400 hover:text-red-500 transition-colors p-1"
+                class="drawer__item-remove"
                 title="Remove item"
               >
                 <svg
@@ -84,11 +81,11 @@
               </button>
             </div>
 
-            <div class="flex justify-between items-center mt-auto pt-2">
-              <div class="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-white">
+            <div class="drawer__item-footer">
+              <div class="drawer__qty">
                 <button
                   type="button"
-                  class="w-8 h-8 flex items-center justify-center text-slate-500 hover:bg-slate-50 disabled:opacity-30"
+                  class="drawer__qty-btn"
                   onclick="updateCartQty({{ forloop.index }}, {{ item.quantity | minus: 1 }})"
                   {% if item.quantity == 1 %}
                     disabled
@@ -106,10 +103,10 @@
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                   </svg>
                 </button>
-                <span class="w-8 text-center text-xs font-bold text-slate-900">{{ item.quantity }}</span>
+                <span class="drawer__qty-val">{{ item.quantity }}</span>
                 <button
                   type="button"
-                  class="w-8 h-8 flex items-center justify-center text-slate-500 hover:bg-slate-50"
+                  class="drawer__qty-btn"
                   onclick="updateCartQty({{ forloop.index }}, {{ item.quantity | plus: 1 }})"
                 >
                   <svg
@@ -125,45 +122,36 @@
                   </svg>
                 </button>
               </div>
-              <p class="text-sm font-bold text-slate-900">{{ item.final_line_price | money }}</p>
+              <p class="drawer__item-price">{{ item.final_line_price | money }}</p>
             </div>
           </div>
         </div>
       {% endfor %}
     </div>
 
-    <div class="mt-8 pt-6 border-t border-slate-100">
-      <div class="flex justify-between items-center mb-6">
-        <span class="text-slate-500 font-medium">Subtotal</span>
-        <span class="text-xl font-black text-slate-900">{{ cart.total_price | money }}</span>
+    <div class="drawer__footer">
+      <div class="drawer__summary">
+        <span class="drawer__summary-label">Subtotal</span>
+        <span class="drawer__summary-price">{{ cart.total_price | money }}</span>
       </div>
 
-      <div class="flex flex-col gap-3">
+      <div class="drawer__actions">
         <form action="{{ routes.cart_url }}" method="post">
           <button
             type="submit"
             name="checkout"
-            class="w-full bg-slate-900 text-white rounded-xl py-4 font-bold text-sm uppercase tracking-widest hover:bg-slate-800 transition-all active:scale-[0.98] shadow-lg shadow-slate-200"
+            class="drawer__checkout-btn"
           >
             Go to Checkout
           </button>
         </form>
-        <div class="flex justify-center">
-          <a
-            href="{{ routes.cart_url }}"
-            class="progressive-underline py-2 text-xs font-bold text-slate-400 hover:text-slate-900 uppercase tracking-widest transition-all"
-          >
-            View Full Cart
-          </a>
-        </div>
+        <a href="{{ routes.cart_url }}" class="drawer__view-cart"> View Full Cart </a>
       </div>
-      <p class="text-[10px] text-slate-400 text-center mt-4 uppercase tracking-tighter">
-        Shipping & taxes calculated at checkout
-      </p>
+      <p class="drawer__note">Shipping & taxes calculated at checkout</p>
     </div>
   {% else %}
-    <div class="flex-1 flex flex-col justify-center items-center text-center p-8">
-      <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mb-6 text-slate-200">
+    <div class="drawer__empty">
+      <div class="drawer__empty-icon">
         <svg
           width="48"
           height="48"
@@ -177,11 +165,11 @@
           <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path d="M3 6h18"></path><path d="M16 10a4 4 0 0 1-8 0"></path>
         </svg>
       </div>
-      <h3 class="text-xl font-bold text-slate-900 mb-2">Your cart is empty</h3>
-      <p class="text-sm text-slate-500 mb-8 max-w-[200px]">Looks like you haven't added anything to your cart yet.</p>
+      <h3 class="drawer__empty-title">Your cart is empty</h3>
+      <p class="drawer__empty-text">Looks like you haven't added anything to your cart yet.</p>
       <a
         href="{{ routes.all_products_collection_url }}"
-        class="inline-flex items-center gap-2 bg-slate-900 text-white px-8 py-3 rounded-full font-bold text-sm uppercase tracking-widest hover:bg-slate-800 transition-all active:scale-95"
+        class="drawer__empty-btn"
         onclick="closeSideCart()"
       >
         Start Shopping

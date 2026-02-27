@@ -4,7 +4,9 @@
 
 window.openSideCart = function () {
   document.body.classList.add("side-cart-open");
+  updateSideCart();
 };
+
 
 window.closeSideCart = function () {
   document.body.classList.remove("side-cart-open");
@@ -22,16 +24,29 @@ window.updateSideCart = function () {
     .then((text) => {
       const parser = new DOMParser();
       const doc = parser.parseFromString(text, "text/html");
-      const newContent = doc.querySelector("#shopify-section-cart-drawer");
+      const sideCartContent = document.getElementById("SideCartContent");
+      if (!sideCartContent) return;
+
+      // Try multiple selectors
+      const newContent = doc.querySelector("#shopify-section-cart-drawer") 
+                      || doc.querySelector(".drawer")
+                      || doc.body.firstElementChild;
 
       if (newContent) {
-        document.getElementById("SideCartContent").innerHTML =
-          newContent.innerHTML;
+        // Use outerHTML to preserve the .drawer wrapper and its styles
+        sideCartContent.innerHTML = newContent.outerHTML;
       } else {
-        document.getElementById("SideCartContent").innerHTML = text;
+        // Absolute fallback
+        sideCartContent.innerHTML = text;
       }
     })
-    .catch((error) => {})
+
+    .catch((error) => {
+      console.error("Side Cart Update Error:", error);
+    })
+
+
+
     .finally(() => {
       // Hide loader if it was shown
       if (loader) loader.classList.remove("opacity-100");

@@ -998,6 +998,11 @@ main[role="main"] {
     object-fit: contain;
 }
 
+.h-full {
+    height: 100%;
+}
+
+
 /* Sold Out Stamp Styles */
 .sold-out-badge {
     position: absolute;
