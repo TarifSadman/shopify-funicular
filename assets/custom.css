@@ -1044,3 +1044,54 @@ main[role="main"] {
     line-height: 1;
     letter-spacing: -0.02em;
 }
+
+/* Form Placeholders */
+input::placeholder,
+textarea::placeholder {
+    color: rgb(93, 0, 255);
+}
+
+/* Add to Cart Disabled State */
+.btn-add-to-cart:disabled {
+    opacity: 0.5;
+    cursor: not-allowed !important;
+    background-color: #64748b !important;
+    transform: none !important;
+}
+
+/* Product Card Quick Add */
+.product-card__quick-add {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    background: #fff;
+    color: #000;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+    border: none;
+    cursor: pointer;
+}
+
+.group:hover .product-card__quick-add {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.product-card__quick-add:hover {
+    background: #000;
+    color: #fff;
+    transform: scale(1.1) !important;
+}
+
+.product-card__quick-add:active {
+    transform: scale(0.95) !important;
+}

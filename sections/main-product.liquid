@@ -165,7 +165,7 @@
               <div class="inline-flex items-center border border-gray-200 rounded-full p-1 bg-gray-50">
                 <button
                   type="button"
-                  onclick="const input = this.parentNode.querySelector('input'); input.stepDown(); input.dispatchEvent(new Event('change'));"
+                  data-action="qty-down"
                   class="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-black hover:bg-white rounded-full transition"
                 >
                   <svg
@@ -188,7 +188,7 @@
                 >
                 <button
                   type="button"
-                  onclick="const input = this.parentNode.querySelector('input'); input.stepUp(); input.dispatchEvent(new Event('change'));"
+                  data-action="qty-up"
                   class="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-black hover:bg-white rounded-full transition"
                 >
                   <svg
@@ -218,7 +218,7 @@
                   type="submit"
                   name="add"
                   id="AddToCart-{{ section.id }}"
-                  class="w-full bg-[#111] text-white py-5 rounded-full text-base font-bold hover:bg-black transition-all shadow-lg active:scale-95"
+                  class="btn-add-to-cart w-full bg-[#111] text-white py-5 rounded-full text-base font-bold hover:bg-black transition-all shadow-lg active:scale-95"
                   {% unless current_variant.available %}
                     disabled
                   {% endunless %}
@@ -229,7 +229,7 @@
               <button
                 class="w-14 h-14 rounded-full border border-gray-200 flex items-center justify-center text-gray-900 hover:bg-gray-50 transition active:scale-90"
                 data-wishlist-handle="{{ product.handle }}"
-                onclick="toggleWishlist('{{ product.handle }}', this)"
+                data-wishlist-toggle="{{ product.handle }}"
                 aria-label="Add to wishlist"
               >
                 {% render 'icon_heart', class: 'h-6 w-6', fill: false %}

@@ -1,9 +1,9 @@
-<div id="SideWishlist" class="side-cart">
-  <div class="side-cart__overlay" onclick="closeWishlist()"></div>
+<div id="SideWishlist" class="side-cart hidden">
+  <div class="side-cart__overlay" data-action="close-wishlist"></div>
   <div class="side-cart__panel">
     <div class="p-6 border-b border-gray-100 flex items-center justify-between">
       <h2 class="text-xl font-bold text-gray-900">My Wishlist</h2>
-      <button onclick="closeWishlist()" class="text-gray-400 hover:text-gray-900 transition">
+      <button data-action="close-wishlist" class="text-gray-400 hover:text-gray-900 transition">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

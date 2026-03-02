@@ -1,5 +1,5 @@
-<div class="side-cart" id="SideCart">
-  <div class="side-cart__overlay" onclick="closeSideCart()"></div>
+<cart-drawer class="side-cart" id="SideCart">
+  <div class="side-cart__overlay"></div>
 
   <div class="side-cart__panel">
     <!-- Persistent Loading Overlay -->
@@ -29,7 +29,7 @@
         <p id="CartErrorMessage"></p>
       </div>
       <button
-        onclick="document.getElementById('CartError').classList.add('hidden')"
+        onclick="this.closest('.side-cart__error').classList.add('hidden')"
         class="side-cart__error-close"
       >
         <svg
@@ -47,4 +47,4 @@
       </button>
     </div>
   </div>
-</div>
+</cart-drawer>

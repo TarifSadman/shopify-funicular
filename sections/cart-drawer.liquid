@@ -62,7 +62,7 @@
               </div>
               <button
                 type="button"
-                onclick="removeCartItem({{ forloop.index }})"
+                data-line="{{ forloop.index }}"
                 class="drawer__item-remove"
                 title="Remove item"
               >
@@ -86,7 +86,8 @@
                 <button
                   type="button"
                   class="drawer__qty-btn"
-                  onclick="updateCartQty({{ forloop.index }}, {{ item.quantity | minus: 1 }})"
+                  data-line="{{ forloop.index }}"
+                  data-qty="{{ item.quantity | minus: 1 }}"
                   {% if item.quantity == 1 %}
                     disabled
                   {% endif %}
@@ -107,7 +108,8 @@
                 <button
                   type="button"
                   class="drawer__qty-btn"
-                  onclick="updateCartQty({{ forloop.index }}, {{ item.quantity | plus: 1 }})"
+                  data-line="{{ forloop.index }}"
+                  data-qty="{{ item.quantity | plus: 1 }}"
                 >
                   <svg
                     width="12"
@@ -170,7 +172,7 @@
       <a
         href="{{ routes.all_products_collection_url }}"
         class="drawer__empty-btn"
-        onclick="closeSideCart()"
+        data-action="close-cart"
       >
         Start Shopping
         <svg

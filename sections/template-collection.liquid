@@ -301,7 +301,7 @@
           {% paginate collection.products by section.settings.number_of_products_per_page %}
             <div class="f-grid f-grid-cols-2 f-xl-grid-cols-3">
               {% for product in collection.products %}
-                {% render 'product-card', product: product %}
+                {% render 'product-card', product: product, hide_quick_add: true %}
               {% else %}
                 <div class="col-span-full py-24 text-center">
                   <p class="text-gray-500">No products found for this selection.</p>
