@@ -45,14 +45,12 @@
 
   const updateWishlistHeartStates = () => {
     const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
-    document.querySelectorAll("[data-wishlist-handle]").forEach((btn) => {
-      const handle = btn.getAttribute("data-wishlist-handle");
+    document.querySelectorAll("[data-wishlist-toggle]").forEach((btn) => {
+      const handle = btn.getAttribute("data-wishlist-toggle");
       if (wishlist.includes(handle)) {
-        btn.classList.add("text-red-500", "border-red-100", "bg-red-50");
-        btn.querySelector("svg").setAttribute("fill", "currentColor");
+        btn.classList.add("wishlist-active");
       } else {
-        btn.classList.remove("text-red-500", "border-red-100", "bg-red-50");
-        btn.querySelector("svg").setAttribute("fill", "none");
+        btn.classList.remove("wishlist-active");
       }
     });
   };
@@ -407,7 +405,10 @@
    */
   document.addEventListener("theme:cart:update", () => updateSideCart());
   document.addEventListener("theme:cart:open", () => openSideCart());
-  document.addEventListener("theme:wishlist:update", () => updateWishlistDrawer());
+  document.addEventListener("theme:wishlist:update", () => {
+    updateWishlistDrawer();
+    updateWishlistHeartStates();
+  });
 
   /**
    * DOM Content Loaded Init

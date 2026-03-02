@@ -40,6 +40,7 @@
               document.querySelector('#CollectionResultsCount').innerHTML = html.querySelector('#CollectionResultsCount').innerHTML;
             }
             window.history.pushState({ path: url }, '', url);
+            window.dispatchEvent(new CustomEvent('theme:wishlist:update'));
           })
           .catch(e => {})
           .finally(() => {
