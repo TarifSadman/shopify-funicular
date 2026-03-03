@@ -344,8 +344,16 @@
       openSideCart();
     }
     if (e.target.closest('[data-action="close-cart"]')) {
-      e.preventDefault();
+      const cta = e.target.closest('[data-action="close-cart"]');
+      const href = cta.getAttribute("href");
+
       closeSideCart();
+
+      if (href && href !== "#") {
+        window.location.href = href;
+      } else {
+        e.preventDefault();
+      }
     }
     if (e.target.closest('[data-action="close-wishlist"]')) {
       e.preventDefault();
@@ -354,7 +362,6 @@
       if (wishlistPanel) wishlistPanel.classList.add("hidden");
     }
 
-    // 2. Wishlist Actions
 
     const wishlistToggle = e.target.closest("[data-wishlist-toggle]");
     if (wishlistToggle) {
