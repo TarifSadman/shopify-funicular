@@ -339,22 +339,87 @@
     </div>
   </div>
 
-  <!-- Related Products Section -->
   {% assign related_collection = product.collections.first %}
   {% if related_collection %}
-    <div class="mt-24 border-t border-gray-100 pt-16">
+    <div class="mt-12 pt-10">
       <h2 class="text-3xl font-bold text-gray-900 mb-12">Related Products</h2>
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {% assign count = 0 %}
         {% for rel_product in related_collection.products %}
           {% if rel_product.id != product.id and count < 4 %}
-            {% render 'product-card', product: rel_product %}
+            {% render 'product-card', product: rel_product, use_simple_plus: true %}
             {% assign count = count | plus: 1 %}
           {% endif %}
         {% endfor %}
       </div>
     </div>
   {% endif %}
+
+  <!-- Recently Viewed Block -->
+  {% for block in section.blocks %}
+    {% if block.type == 'recently_viewed' %}
+      <div
+        class="recently-viewed-block mt-12 pt-10 hidden"
+        id="RecentlyViewed-{{ section.id }}"
+        {{ block.shopify_attributes }}
+      >
+        <h2 class="text-3xl font-bold text-gray-900 mb-12">{{ block.settings.heading }}</h2>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4" id="RecentlyViewedGrid-{{ section.id }}">
+          {% if search.results.size > 0 %}
+            {% for product in search.results %}
+              {% render 'product-card', product: product, use_simple_plus: true %}
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          const sectionId = '{{ section.id }}';
+          const currentHandle = '{{ product.handle }}';
+
+          function setRecentlyViewed(handle) {
+            let handles = JSON.parse(localStorage.getItem('theme:recently_viewed') || '[]');
+            handles = handles.filter((h) => h !== handle);
+            handles.unshift(handle);
+            localStorage.setItem('theme:recently_viewed', JSON.stringify(handles.slice(0, 10)));
+          }
+
+          async function initRV() {
+            if (currentHandle) setRecentlyViewed(currentHandle);
+
+            const viewHandles = JSON.parse(localStorage.getItem('theme:recently_viewed') || '[]')
+              .filter((h) => h !== currentHandle)
+              .slice(0, 4);
+
+            if (viewHandles.length > 0) {
+              const query = viewHandles.map((h) => `handle:${h}`).join(' OR ');
+              const url = `/search?type=product&q=${encodeURIComponent(query)}&section_id=${sectionId}`;
+
+              try {
+                const response = await fetch(url);
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const searchGrid = doc.getElementById('RecentlyViewedGrid-' + sectionId);
+                const productCards = searchGrid ? searchGrid.querySelectorAll('.product-card') : [];
+
+                if (productCards.length > 0) {
+                  const targetGrid = document.getElementById('RecentlyViewedGrid-' + sectionId);
+                  targetGrid.innerHTML = '';
+                  productCards.forEach((card) => targetGrid.appendChild(card));
+                  document.getElementById('RecentlyViewed-' + sectionId).classList.remove('hidden');
+                }
+              } catch (e) {
+                console.error('Error loading RV:', e);
+              }
+            }
+          }
+          document.addEventListener('DOMContentLoaded', initRV);
+        })();
+      </script>
+    {% endif %}
+  {% endfor %}
 </div>
 
 {% schema %}
@@ -404,6 +469,19 @@
       "type": "faq",
       "name": "FAQ",
       "limit": 1
+    },
+    {
+      "type": "recently_viewed",
+      "name": "Recently Viewed Products",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Recently Viewed"
+        }
+      ]
     }
   ],
   "presets": [

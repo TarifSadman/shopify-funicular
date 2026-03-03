@@ -18,15 +18,15 @@
 
     <!-- Badges -->
     <div class="product-card__badges">
-      {% assign custom_badge = product.metafields.custom.product_badge.value %}
-      {% if custom_badge != blank %}
+      {% assign custom_badges = product.metafields.custom.product_badge.value %}
+      {% for badge in custom_badges %}
         <div
           class="badge badge--custom"
-          style="background: {{ custom_badge.badge_bg }}; color: {{ custom_badge.badge_color }};"
+          style="background: {{ badge.badge_bg }}; color: {{ badge.badge_color }};"
         >
-          {{ custom_badge.badge_text }}
+          {{ badge.badge_text }}
         </div>
-      {% endif %}
+      {% endfor %}
     </div>
 
     <!-- Wishlist Button -->
@@ -52,7 +52,6 @@
       </svg>
     </button>
 
-    <!-- Quick Add (Maintained for functionality) -->
     {% unless hide_quick_add %}
       {% if product.available %}
         <div class="product-card__quick-add-wrap">
@@ -63,20 +62,37 @@
             class="product-card__quick-add-btn"
             aria-label="Quick Add to Cart"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-              <path d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-            </svg>
+            {% if use_simple_plus %}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            {% else %}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                <path d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+              </svg>
+            {% endif %}
           </button>
         </div>
       {% endif %}

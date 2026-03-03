@@ -1,11 +1,29 @@
 a,
 button,
 [role="button"],
-input[type="button"],
-input[type="submit"],
-input[type="reset"],
+input,
+select,
+textarea,
 summary {
     cursor: pointer !important;
+}
+
+/* Enhanced Focus States for Accessibility */
+:focus {
+    outline: none;
+}
+
+:focus-visible {
+    outline: 2px solid #000;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.9);
+    border-radius: 4px;
+}
+
+.product-card:focus-within {
+    outline: 2px solid #000;
+    outline-offset: 4px;
+    border-radius: 20px;
 }
 
 button#AddToCart {

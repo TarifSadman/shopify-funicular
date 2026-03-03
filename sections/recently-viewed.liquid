@@ -1,0 +1,88 @@
+<div
+  class="recently-viewed-section max-w-7xl mx-auto px-4 sm:px-6 py-24 hidden"
+  data-section-id="{{ section.id }}"
+  id="RecentlyViewed-{{ section.id }}"
+>
+  <h2 class="text-3xl font-bold text-gray-900 mb-12">{{ section.settings.title }}</h2>
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4" id="RecentlyViewedGrid-{{ section.id }}">
+    <!-- Dynamic content will be injected or rendered here -->
+    {% if search.results.size > 0 %}
+      {% for product in search.results %}
+        {% render 'product-card', product: product, use_simple_plus: true %}
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  (function () {
+    const sectionContainer = document.querySelector('#RecentlyViewed-{{ section.id }}');
+    const gridContainer = document.querySelector('#RecentlyViewedGrid-{{ section.id }}');
+    const currentHandle = '{{ product.handle }}';
+
+    function getRecentlyViewed() {
+      return JSON.parse(localStorage.getItem('theme:recently_viewed') || '[]');
+    }
+
+    function setRecentlyViewed(handle) {
+      let handles = getRecentlyViewed();
+      handles = handles.filter((h) => h !== handle);
+      handles.unshift(handle);
+      handles = handles.slice(0, 4); // Keep last 4
+      localStorage.setItem('theme:recently_viewed', JSON.stringify(handles));
+    }
+
+    async function init() {
+      // 1. Record the current product
+      if (currentHandle) {
+        setRecentlyViewed(currentHandle);
+      }
+
+      // 2. Get handles excluding current one for display
+      const viewHandles = getRecentlyViewed().filter((h) => h !== currentHandle);
+
+      if (viewHandles.length > 0) {
+        // Build search query for handles
+        const query = viewHandles.map((h) => `handle:${h}`).join(' OR ');
+        const url = `/search?type=product&q=${encodeURIComponent(query)}&section_id={{ section.id }}`;
+
+        try {
+          const response = await fetch(url);
+          const html = await response.text();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const newGridContent = doc.querySelector('#RecentlyViewedGrid-{{ section.id }}').innerHTML;
+
+          if (newGridContent.trim().length > 0) {
+            gridContainer.innerHTML = newGridContent;
+            sectionContainer.classList.remove('hidden');
+          }
+        } catch (e) {
+          console.error('Error loading recently viewed products:', e);
+        }
+      }
+    }
+
+    // Run after DOM load
+    document.addEventListener('DOMContentLoaded', init);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Recently Viewed",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Recently Viewed"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Recently Viewed"
+    }
+  ]
+}
+{% endschema %}

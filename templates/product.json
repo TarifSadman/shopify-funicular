@@ -26,6 +26,12 @@
                 },
                 "faq": {
                     "type": "faq"
+                },
+                "recently-viewed": {
+                    "type": "recently_viewed",
+                    "settings": {
+                        "heading": "Recently Viewed Products"
+                    }
                 }
             },
             "block_order": [
@@ -36,7 +42,8 @@
                 "quantity_selector",
                 "buy_buttons",
                 "description",
-                "faq"
+                "faq",
+                "recently-viewed"
             ]
         }
     },

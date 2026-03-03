@@ -88,6 +88,7 @@
                   class="drawer__qty-btn"
                   data-line="{{ forloop.index }}"
                   data-qty="{{ item.quantity | minus: 1 }}"
+                  aria-label="Decrease quantity"
                   {% if item.quantity == 1 %}
                     disabled
                   {% endif %}
@@ -110,6 +111,7 @@
                   class="drawer__qty-btn"
                   data-line="{{ forloop.index }}"
                   data-qty="{{ item.quantity | plus: 1 }}"
+                  aria-label="Increase quantity"
                 >
                   <svg
                     width="12"
