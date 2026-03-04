@@ -1,53 +1,90 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
-    "sections": {
-        "main": {
-            "type": "main-product",
-            "blocks": {
-                "title": {
-                    "type": "title"
-                },
-                "tags": {
-                    "type": "tags"
-                },
-                "price": {
-                    "type": "price"
-                },
-                "variant_selector": {
-                    "type": "variant_selector"
-                },
-                "quantity_selector": {
-                    "type": "quantity_selection"
-                },
-                "buy_buttons": {
-                    "type": "buy_buttons"
-                },
-                "description": {
-                    "type": "description"
-                },
-                "faq": {
-                    "type": "faq"
-                },
-                "recently-viewed": {
-                    "type": "recently_viewed",
-                    "settings": {
-                        "heading": "Recently Viewed Products"
-                    }
-                }
-            },
-            "block_order": [
-                "title",
-                "tags",
-                "price",
-                "variant_selector",
-                "quantity_selector",
-                "buy_buttons",
-                "description",
-                "faq",
-                "recently-viewed"
-            ]
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "tags": {
+          "type": "tags",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "variant_selector": {
+          "type": "variant_selector",
+          "settings": {}
+        },
+        "quantity_selector": {
+          "type": "quantity_selection",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {}
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "faq": {
+          "type": "faq",
+          "settings": {}
+        },
+        "recently-viewed": {
+          "type": "recently_viewed",
+          "settings": {
+            "heading": "Recently Viewed Products"
+          }
         }
+      },
+      "block_order": [
+        "title",
+        "tags",
+        "price",
+        "variant_selector",
+        "quantity_selector",
+        "buy_buttons",
+        "description",
+        "faq",
+        "recently-viewed"
+      ],
+      "settings": {}
     },
-    "order": [
-        "main"
-    ]
+    "1772617292c7552332": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_review_widget_Efn7aF": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "review_data": "sample_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "empty_widget"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_review_widget_Efn7aF"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "1772617292c7552332"
+  ]
 }
