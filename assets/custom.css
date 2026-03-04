@@ -1148,15 +1148,6 @@ main[role="main"] {
     font-size: 0.95rem;
     font-weight: 500;
     color: #4b5563;
-    margin-bottom: 8px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    line-height: 1.4;
-    transition: none;
-    text-decoration: none;
 }
 
 .product-card:hover .product-title {
