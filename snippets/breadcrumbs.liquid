@@ -39,7 +39,7 @@
               <span class="breadcrumb-current" aria-current="page">{{ product.title }}</span>
             </li>
 
-          {%- when 'collection' and collection.handle -%}
+          {%- when 'collection' -%}
             <li class="breadcrumb-separator" aria-hidden="true">
               <svg viewBox="0 0 20 20" fill="currentColor" class="breadcrumb-icon">
                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
@@ -139,3 +139,13 @@
     </div>
   </nav>
 {%- endunless -%}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{%- when 'collection' and collection.handle -%}"
+  to: "{%- when 'collection' -%}"
+  position: 2180..2205
+{% endcomment %}
